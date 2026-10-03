@@ -1,0 +1,1999 @@
+<title>Content Pot Luck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F7F4EC;
+    --surface:#FFFFFF;
+    --surface-soft:#EFEAD9;
+    --border:#E1D9C2;
+    --text:#211D16;
+    --muted:#6E6555;
+    --accent:#D8481C;
+    --accent-ink:#FFFFFF;
+    --accent-2:#1B6E5C;
+    --accent-2-soft:#DCEEE8;
+    --accent-3:#C6910A;
+    --accent-3-soft:#F5E9C8;
+    --danger:#B23B2E;
+    --tag-verified-bg:#DCEEE8;
+    --tag-verified-text:#0F5443;
+    --tag-secondary-bg:#F5E9C8;
+    --tag-secondary-text:#7A5A05;
+    --tag-example-bg:#EFE3F2;
+    --tag-example-text:#6B3E75;
+    --shadow: 0 6px 20px -12px rgba(33,29,22,.35);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#171410;
+      --surface:#211D17;
+      --surface-soft:#292420;
+      --border:#3B342A;
+      --text:#F3EDE0;
+      --muted:#B3A896;
+      --accent:#FF7A48;
+      --accent-ink:#171410;
+      --accent-2:#4FBFA3;
+      --accent-2-soft:#1C3A33;
+      --accent-3:#E8B923;
+      --accent-3-soft:#3A2E0F;
+      --danger:#FF8A73;
+      --tag-verified-bg:#1C3A33;
+      --tag-verified-text:#7EE0C4;
+      --tag-secondary-bg:#3A2E0F;
+      --tag-secondary-text:#F0CC6A;
+      --tag-example-bg:#332A3B;
+      --tag-example-text:#DBB8E4;
+      --shadow: 0 6px 24px -12px rgba(0,0,0,.6);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#171410;
+    --surface:#211D17;
+    --surface-soft:#292420;
+    --border:#3B342A;
+    --text:#F3EDE0;
+    --muted:#B3A896;
+    --accent:#FF7A48;
+    --accent-ink:#171410;
+    --accent-2:#4FBFA3;
+    --accent-2-soft:#1C3A33;
+    --accent-3:#E8B923;
+    --accent-3-soft:#3A2E0F;
+    --danger:#FF8A73;
+    --tag-verified-bg:#1C3A33;
+    --tag-verified-text:#7EE0C4;
+    --tag-secondary-bg:#3A2E0F;
+    --tag-secondary-text:#F0CC6A;
+    --tag-example-bg:#332A3B;
+    --tag-example-text:#DBB8E4;
+    --shadow: 0 6px 24px -12px rgba(0,0,0,.6);
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans Thai','IBM Plex Sans',system-ui,sans-serif;
+    font-size:15.5px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{text-wrap:balance; font-family:'IBM Plex Sans Condensed','IBM Plex Sans Thai',sans-serif;}
+  a{color:inherit;}
+  button{font-family:inherit;}
+  code, .mono{font-family:'IBM Plex Mono',monospace;}
+
+  /* ---------- top bar ---------- */
+  header.topbar{
+    position:sticky;
+    top:env(safe-area-inset-top,0px);
+    z-index:30;
+    background:color-mix(in srgb, var(--bg) 90%, transparent);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+  }
+  .topbar-inner{
+    max-width:980px;
+    margin:0 auto;
+    padding:13px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+  }
+  .brand{display:flex; align-items:center; gap:10px; cursor:pointer; background:none; border:none; padding:0;}
+  .brand .mark{
+    width:30px;height:30px;border-radius:8px;
+    background:var(--accent);
+    display:grid;place-items:center;
+    color:var(--accent-ink);
+    font-family:'IBM Plex Sans Condensed',sans-serif;
+    font-weight:700; font-size:15px;
+    flex:none;
+  }
+  .brand .name{
+    font-family:'IBM Plex Sans Condensed',sans-serif;
+    font-weight:700;
+    font-size:17px;
+    letter-spacing:-.01em;
+    color:var(--text);
+  }
+  .brand .name span{color:var(--accent);}
+  nav.top-nav{display:flex; gap:4px; flex-wrap:wrap;}
+  nav.top-nav button{
+    border:none; background:transparent; color:var(--muted);
+    font-size:13px; font-weight:600; padding:7px 12px; border-radius:999px;
+    cursor:pointer; white-space:nowrap;
+  }
+  nav.top-nav button.active{background:var(--surface-soft); color:var(--text);}
+  nav.top-nav button:disabled{opacity:.4; cursor:default;}
+
+  main{max-width:980px; margin:0 auto; padding:32px 20px 90px;}
+  .view{display:none;}
+  .view.active{display:block;}
+
+  /* ---------- badges / tags ---------- */
+  .badge-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;}
+  .tag{
+    display:inline-flex; align-items:center; gap:5px;
+    font-size:11.5px; font-weight:600; padding:4px 11px; border-radius:999px;
+  }
+  .tag.verified{background:var(--tag-verified-bg); color:var(--tag-verified-text);}
+  .tag.secondary{background:var(--tag-secondary-bg); color:var(--tag-secondary-text);}
+  .tag.example{background:var(--tag-example-bg); color:var(--tag-example-text);}
+  .tag.ghost{background:var(--surface-soft); color:var(--muted); border:1px solid var(--border);}
+
+  /* ---------- home ---------- */
+  .home-hero{margin-bottom:8px;}
+  .eyebrow{
+    font-family:'IBM Plex Sans Condensed',sans-serif;
+    font-size:12.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); margin:0 0 10px;
+  }
+  .home-hero h1{
+    font-size:clamp(28px,5vw,42px);
+    font-weight:700; letter-spacing:-.01em;
+    margin:0 0 14px; color:var(--text);
+    max-width:20ch;
+  }
+  .home-hero p{color:var(--muted); max-width:60ch; font-size:15.5px; margin:0 0 4px;}
+
+  .divider{border:none; border-top:1px solid var(--border); margin:32px 0;}
+
+  .section-label{
+    font-family:'IBM Plex Sans Condensed',sans-serif;
+    font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--muted); margin:0 0 16px;
+  }
+
+  .module-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px;}
+  .module-card{
+    background:var(--surface); border:1.3px solid var(--border); border-radius:14px;
+    padding:20px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:10px;
+    cursor:pointer; text-align:left; position:relative;
+  }
+  .module-card:disabled, .module-card.disabled{cursor:default; opacity:.62;}
+  .module-card .num{
+    font-family:'IBM Plex Sans Condensed',sans-serif;
+    font-size:12px; font-weight:700; color:var(--accent);
+    letter-spacing:.04em;
+  }
+  .module-card h3{margin:0; font-size:17px; font-weight:700;}
+  .module-card p{margin:0; font-size:13px; color:var(--muted); flex:1;}
+  .module-card .status{
+    align-self:flex-start; font-size:11px; font-weight:600; padding:3px 10px; border-radius:999px;
+  }
+  .module-card .status.ready{background:var(--tag-verified-bg); color:var(--tag-verified-text);}
+  .module-card .status.soon{background:var(--surface-soft); color:var(--muted); border:1px solid var(--border);}
+
+  .legend-box{
+    background:var(--surface-soft); border:1px solid var(--border); border-radius:14px;
+    padding:16px 18px; display:flex; flex-direction:column; gap:10px; font-size:13px;
+  }
+  .legend-row{display:flex; align-items:flex-start; gap:10px;}
+  .legend-row .tag{flex:none;}
+  .legend-row p{margin:0; color:var(--muted);}
+
+  /* ---------- module 1 hub ---------- */
+  .m1-header{margin-bottom:18px;}
+  .m1-header h2{font-size:clamp(24px,4vw,32px); margin:0 0 8px; font-weight:700;}
+  .m1-header p{color:var(--muted); max-width:64ch; margin:0;}
+
+  .subtab-row{
+    display:flex; gap:6px; margin:20px 0 24px; flex-wrap:wrap;
+    border-bottom:1px solid var(--border); padding-bottom:0;
+  }
+  .subtab-row button{
+    border:none; background:transparent; color:var(--muted);
+    font-size:13.5px; font-weight:600; padding:10px 4px; margin-right:18px;
+    cursor:pointer; border-bottom:2.5px solid transparent; margin-bottom:-1px;
+  }
+  .subtab-row button.active{color:var(--accent); border-bottom-color:var(--accent);}
+
+  .subview{display:none;}
+  .subview.active{display:block;}
+
+  .lead-block{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:20px 22px; margin-bottom:20px; box-shadow:var(--shadow);
+  }
+  .lead-block h3{margin:0 0 10px; font-size:19px; font-weight:700;}
+  .lead-block p{margin:0 0 10px; color:var(--text);}
+  .lead-block p:last-child{margin-bottom:0;}
+  .lead-block .muted{color:var(--muted); font-size:13.5px;}
+
+  .callout{
+    border-left:3px solid var(--accent);
+    background:var(--surface-soft);
+    border-radius:0 12px 12px 0;
+    padding:14px 18px;
+    margin:18px 0;
+    font-size:13.8px;
+  }
+  .callout b{color:var(--text);}
+  .callout.teal{border-left-color:var(--accent-2);}
+  .callout.gold{border-left-color:var(--accent-3);}
+
+  .checklist{
+    display:flex; flex-direction:column; gap:10px; margin:16px 0;
+  }
+  .check-item{
+    display:flex; gap:12px; align-items:flex-start;
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:13px 16px;
+  }
+  .check-item .n{
+    flex:none; width:24px; height:24px; border-radius:7px;
+    background:var(--accent); color:var(--accent-ink);
+    display:grid; place-items:center; font-weight:700; font-size:12.5px;
+    font-family:'IBM Plex Sans Condensed',sans-serif;
+  }
+  .check-item b{display:block; font-size:14px; margin-bottom:2px;}
+  .check-item span{font-size:13px; color:var(--muted);}
+
+  .hook-group-label{
+    font-family:'IBM Plex Sans Condensed',sans-serif;
+    font-size:12.5px; font-weight:700; color:var(--accent-2);
+    text-transform:uppercase; letter-spacing:.04em;
+    margin:18px 0 10px;
+  }
+  .hook-type-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:12px; margin:0 0 6px;}
+  .hook-type-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px 16px;
+  }
+  .hook-type-card .name{font-size:13.8px; font-weight:700; margin:0 0 6px;}
+  .hook-type-card .ex{font-size:12.8px; color:var(--muted); margin:0; line-height:1.55;}
+  .hook-type-card .ex b{color:var(--text); font-weight:600;}
+  .hook-type-card .note{display:inline-block; margin-top:6px; font-size:10.5px; font-weight:600; color:var(--accent-3); text-transform:uppercase; letter-spacing:.03em;}
+
+  .prod-checklist{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:16px 20px 6px; margin:18px 0;
+  }
+  .prod-checklist .pc-head{
+    display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px;
+  }
+  .prod-checklist .pc-head b{font-size:14px;}
+  .prod-checklist .pc-count{font-size:12px; color:var(--accent-2); font-family:'IBM Plex Mono',monospace; white-space:nowrap;}
+  .pc-item{
+    display:flex; align-items:flex-start; gap:10px; padding:10px 0;
+    border-top:1px dashed var(--border); cursor:pointer; user-select:none;
+  }
+  .pc-item input{margin-top:3px; width:16px; height:16px; accent-color:var(--accent-2); flex:none; cursor:pointer;}
+  .pc-item span{font-size:13.3px; line-height:1.5; color:var(--text);}
+  .pc-item.done span{color:var(--muted); text-decoration:line-through; text-decoration-color:var(--muted);}
+
+  .plat-guide-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin:16px 0 8px;}
+  .plat-guide-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:18px 20px; box-shadow:var(--shadow);
+  }
+  .plat-guide-card .pg-name{
+    font-family:'IBM Plex Sans Condensed',sans-serif; font-weight:700; font-size:16px;
+    display:flex; align-items:center; gap:8px; margin:0 0 4px;
+  }
+  .plat-guide-card .pg-name .dot{width:9px; height:9px; border-radius:50%; background:var(--accent); flex:none;}
+  .plat-guide-card:nth-child(2) .pg-name .dot{background:var(--accent-3);}
+  .plat-guide-card:nth-child(3) .pg-name .dot{background:var(--accent-2);}
+  .plat-guide-card .pg-stat{font-size:11.5px; color:var(--muted); font-family:'IBM Plex Mono',monospace; margin:0 0 12px;}
+  .plat-guide-card .pg-label{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); margin:12px 0 6px;}
+  .plat-guide-card .pg-label:first-of-type{margin-top:0;}
+  .plat-guide-card ul{margin:0; padding-left:17px; font-size:12.6px; color:var(--text); line-height:1.6;}
+  .plat-guide-card ul li{margin-bottom:4px;}
+
+  .mistake-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin:16px 0;}
+  .mistake-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:15px 16px;
+  }
+  .mistake-card .label{
+    font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--danger); margin-bottom:6px;
+  }
+  .mistake-card p{margin:0; font-size:13.3px; color:var(--text);}
+
+  /* before/after */
+  .ba-compare{
+    display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:stretch;
+    margin:18px 0;
+  }
+  .ba-compare .arrow{
+    display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:20px;
+  }
+  .ba-card{
+    border-radius:12px; padding:16px 17px; border:1px solid var(--border);
+  }
+  .ba-card.before{background:var(--surface-soft);}
+  .ba-card.after{background:var(--accent-2-soft); border-color:var(--accent-2);}
+  .ba-card .k{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); margin-bottom:8px;}
+  .ba-card.after .k{color:var(--accent-2);}
+  .ba-card .line{font-size:15px; font-weight:600; margin:0 0 6px; line-height:1.5;}
+  .ba-card .why{font-size:12.5px; color:var(--muted); margin:0;}
+  @media (max-width:640px){
+    .ba-compare{grid-template-columns:1fr;}
+    .ba-compare .arrow{transform:rotate(90deg); padding:2px 0;}
+  }
+
+  .beat-row{
+    display:flex; align-items:stretch; gap:0; margin:18px 0; flex-wrap:wrap;
+  }
+  .beat{
+    flex:1; min-width:140px; background:var(--surface); border:1px solid var(--border);
+    padding:14px 16px; font-size:13px; position:relative;
+  }
+  .beat:first-child{border-radius:12px 0 0 12px;}
+  .beat:last-child{border-radius:0 12px 12px 0;}
+  .beat .conn{
+    font-family:'IBM Plex Sans Condensed',sans-serif; font-weight:700; font-size:11px;
+    text-transform:uppercase; letter-spacing:.06em; color:var(--accent);
+    display:block; margin-bottom:5px;
+  }
+  .beat.weak{background:var(--surface-soft); color:var(--muted);}
+  .beat.weak .conn{color:var(--muted);}
+  @media (max-width:640px){
+    .beat-row{flex-direction:column;}
+    .beat:first-child{border-radius:12px 12px 0 0;}
+    .beat:last-child{border-radius:0 0 12px 12px;}
+  }
+
+  .stage-track{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:18px 0;}
+  .stage{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px;
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .stage .stage-title{
+    font-family:'IBM Plex Sans Condensed',sans-serif; font-weight:700; font-size:14px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .stage .stage-title .dot{width:8px; height:8px; border-radius:50%; background:var(--accent); flex:none;}
+  .stage:nth-child(2) .stage-title .dot{background:var(--accent-3);}
+  .stage:nth-child(3) .stage-title .dot{background:var(--accent-2);}
+  .stage p{margin:0; font-size:12.8px; color:var(--muted);}
+  .stage .good, .stage .bad{font-size:12.5px; margin:0; padding:8px 10px; border-radius:8px;}
+  .stage .good{background:var(--accent-2-soft); color:var(--text);}
+  .stage .bad{background:var(--surface-soft); color:var(--muted); text-decoration:line-through; text-decoration-color:var(--danger);}
+  @media (max-width:700px){.stage-track{grid-template-columns:1fr;}}
+
+  .source-note{
+    display:block; margin-top:20px;
+    font-size:12px; color:var(--muted); padding-top:14px; border-top:1px dashed var(--border);
+    line-height:1.6; overflow-wrap:break-word;
+  }
+  .source-note a{color:var(--accent-2); text-decoration:underline;}
+
+  .flow-track{display:flex; align-items:stretch; gap:0; margin:18px 0; flex-wrap:wrap;}
+  .flow-step{
+    flex:1; min-width:150px; background:var(--surface); border:1px solid var(--border);
+    padding:14px 16px; font-size:13px; position:relative;
+  }
+  .flow-step:first-child{border-radius:12px 0 0 12px;}
+  .flow-step:last-child{border-radius:0 12px 12px 0;}
+  .flow-step .fn{
+    font-family:'IBM Plex Sans Condensed',sans-serif; font-weight:700; font-size:11px;
+    text-transform:uppercase; letter-spacing:.06em; color:var(--accent);
+    display:block; margin-bottom:5px;
+  }
+  .flow-step b{display:block; font-size:13.5px; margin-bottom:2px;}
+  .flow-step span.d{font-size:12px; color:var(--muted);}
+  @media (max-width:700px){
+    .flow-track{flex-direction:column;}
+    .flow-step:first-child{border-radius:12px 12px 0 0;}
+    .flow-step:last-child{border-radius:0 0 12px 12px;}
+  }
+
+  .prompt-box{
+    background:var(--surface-soft); border:1px solid var(--border); border-radius:12px;
+    margin:16px 0; overflow:hidden;
+  }
+  .prompt-box-head{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:9px 14px; border-bottom:1px dashed var(--border);
+    font-size:11.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.04em;
+  }
+  .prompt-box-head button{
+    border:1px solid var(--border); background:var(--surface); color:var(--text);
+    font-size:11.5px; font-weight:600; padding:5px 13px; border-radius:999px; cursor:pointer;
+    font-family:'IBM Plex Sans Thai',sans-serif;
+  }
+  .prompt-box-head button.copied{background:var(--accent-2); color:#fff; border-color:var(--accent-2);}
+  .prompt-box pre{
+    margin:0; padding:16px; font-family:'IBM Plex Mono',monospace; font-size:12.2px; line-height:1.7;
+    white-space:pre-wrap; word-break:break-word; color:var(--text); overflow-x:auto;
+  }
+
+  .progress-nav{
+    display:flex; justify-content:space-between; align-items:center; margin-top:28px;
+    padding-top:18px; border-top:1px solid var(--border);
+  }
+  .progress-nav button{
+    border:1px solid var(--border); background:var(--surface); color:var(--text);
+    font-size:13px; font-weight:600; padding:9px 16px; border-radius:999px; cursor:pointer;
+  }
+  .progress-nav button.primary{background:var(--accent); color:var(--accent-ink); border-color:var(--accent);}
+  .progress-nav button:disabled{opacity:.35; cursor:default;}
+
+  footer.site-foot{
+    max-width:980px; margin:0 auto; padding:0 20px 60px; color:var(--muted); font-size:12.5px;
+  }
+</style>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <button class="brand" onclick="Router.go('home')">
+      <span class="mark">C</span>
+      <span class="name">Content <span>Pot Luck</span></span>
+    </button>
+    <nav class="top-nav">
+      <button id="nav-home" onclick="Router.go('home')">หน้าแรก</button>
+      <button id="nav-m1" onclick="Router.go('m1')">1. Framework</button>
+      <button id="nav-m2" onclick="Router.go('m2')">2. ตัวอย่าง</button>
+      <button id="nav-m3" onclick="Router.go('m3')">3. Algorithm</button>
+      <button id="nav-m4" onclick="Router.go('m4')">4. AI Prompt</button>
+      <button id="nav-glossary" onclick="Router.go('glossary')">คำศัพท์</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ HOME ============ -->
+  <section id="view-home" class="view active">
+    <div class="home-hero">
+      <p class="eyebrow">Training Hub — ทีมทำ Content ศูนย์การค้า</p>
+      <h1>คิดให้เป็นระบบ ก่อนลงมือทำ Content</h1>
+      <p>เว็บนี้รวม framework ที่พิสูจน์แล้วว่าใช้ได้จริง สำหรับทำ content ให้คนดูจบตั้งแต่ต้นจนท้าย บน IG, TikTok และ FB Reels เนื้อหาทุกส่วนบอกไว้ชัดเจนว่าอ้างอิงจากต้นฉบับ หรือเป็นตัวอย่างที่เขียนขึ้นเพื่อสอน</p>
+      <p style="color:var(--muted); font-size:12px; margin-top:14px;">📅 อัปเดตข้อมูลล่าสุด: กันยายน 2026 — ตัวเลข/ข้อมูล algorithm เปลี่ยนได้เรื่อยๆ ทุกไตรมาส ควรกลับมาเช็คซ้ำเป็นระยะ โดยเฉพาะก่อนเอาตัวเลขไปอ้างอิงต่อ</p>
+    </div>
+
+    <hr class="divider">
+
+    <p class="section-label">4 โมดูล</p>
+    <div class="module-grid">
+      <button class="module-card" onclick="Router.go('m1')">
+        <span class="num">โมดูล 01</span>
+        <h3>Framework การทำ Content</h3>
+        <p>3 กรอบคิดที่ต่อกันเป็นระบบ: เปิดด้วยอะไรใน 3 วินาทีแรก, ร้อยเรื่องยังไงให้คนอยากดูต่อ, และประกอบเป็นคลิปทั้งชิ้นแบบไหน</p>
+        <span class="status ready">พร้อมดู</span>
+      </button>
+      <button class="module-card" onclick="Router.go('m2')">
+        <span class="num">โมดูล 02</span>
+        <h3>ตัวอย่างตามหมวด × Platform</h3>
+        <p>Food, IT, Health & Wellness, Thai Souvenir + เคสจริง 1 เคส — วิธีคิดแบบเดียวกันนี้เอาไปใช้กับหมวดร้านอื่นในห้างได้ทุกหมวด</p>
+        <span class="status ready">พร้อมดู</span>
+      </button>
+      <button class="module-card" onclick="Router.go('m3')">
+        <span class="num">โมดูล 03</span>
+        <h3>Algorithm ของแต่ละ Platform</h3>
+        <p>สิ่งที่ IG, TikTok, FB Reels ใช้ตัดสินว่าจะดันคอนเทนต์ให้ใคร + หลักคิดเรื่องงบโฆษณา (boost) แยกชัดว่าอะไรยืนยันได้ อะไรเป็นการประมาณการ</p>
+        <span class="status ready">พร้อมดู</span>
+      </button>
+      <button class="module-card" onclick="Router.go('m4')">
+        <span class="num">โมดูล 04</span>
+        <h3>ใช้ AI ช่วยทำ Content</h3>
+        <p>ชุด prompt ต่อกันเป็นห่วงโซ่ ตั้งแต่คิด hook จนถึง storyboard สคริปต์ ปรับ platform และเช็คคุณภาพ ใช้ได้กับ ChatGPT, Claude, Gemini</p>
+        <span class="status ready">พร้อมดู</span>
+      </button>
+    </div>
+
+    <p style="margin-top:14px;"><button onclick="Router.go('glossary')" style="background:none;border:none;color:var(--accent-2);font-weight:600;font-size:13.5px;cursor:pointer;text-decoration:underline;padding:0;">📖 ดูคำศัพท์ที่ใช้บ่อยทั้งเว็บ →</button></p>
+
+    <hr class="divider">
+
+    <p class="section-label">อ่านป้ายนี้ก่อนเริ่ม</p>
+    <div class="legend-box">
+      <div class="legend-row">
+        <span class="tag verified">ยืนยันจากต้นทาง</span>
+        <p>มาจากแหล่งทางการของแพลตฟอร์ม หรือคำพูดต้นฉบับที่ตรวจสอบย้อนกลับได้</p>
+      </div>
+      <div class="legend-row">
+        <span class="tag secondary">ประมาณการ/แหล่งรอง</span>
+        <p>ตัวเลขหรือข้อสรุปที่บล็อกอุตสาหกรรมอ้างต่อกัน แต่แพลตฟอร์มไม่ได้ยืนยันตรงๆ ใช้เป็นแนวทาง ไม่ใช่ข้อเท็จจริงตายตัว</p>
+      </div>
+      <div class="legend-row">
+        <span class="tag example">ตัวอย่างประกอบ</span>
+        <p>สถานการณ์จำลองที่เขียนขึ้นเพื่อสอน ไม่ใช่เคสจริงของแบรนด์ใด และไม่มีตัวเลขผลลัพธ์จริงอ้างอิง</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MODULE 1 ============ -->
+  <section id="view-m1" class="view">
+    <div class="m1-header">
+      <p class="eyebrow">โมดูล 01</p>
+      <h2>Framework การทำ Content ให้คนดูจบ</h2>
+      <p>3 framework นี้ดูแลคนละช่วงของคลิป ไม่ทับซ้อนกัน — ใช้ต่อกันตามลำดับ ไม่ใช่เลือกใช้อันใดอันหนึ่ง (ตัดเรื่อง Hook ออกแล้ว เพราะซ้ำกับ 1.1)</p>
+    </div>
+
+    <div class="subtab-row">
+      <button id="tab-1-1" class="active" onclick="M1.go(1)">1.1 Hook 4 คำถาม</button>
+      <button id="tab-1-2" onclick="M1.go(2)">1.2 Story Dance</button>
+      <button id="tab-1-3" onclick="M1.go(3)">1.3 โครงทั้งคลิป</button>
+    </div>
+
+    <!-- ---- 1.1 HOOK ---- -->
+    <div id="sub-1-1" class="subview active">
+      <div class="badge-row">
+        <span class="tag secondary">แหล่งรอง — สรุปจากบล็อกที่วิเคราะห์วิดีโอ ไม่ใช่ transcript ต้นฉบับ</span>
+      </div>
+
+      <div class="lead-block">
+        <h3>ดูแลช่วง 0-3 วินาทีแรก</h3>
+        <p>ลองเทียบสองคลิปนี้ คลิปแรกเปิดด้วย <i>"ลาเต้บลูเบอร์รี่วนิลา น้ำแข็ง"</i> — คนดูรู้ครบตั้งแต่คำแรกว่าเป็นเมนูอะไร เลยเลื่อนผ่าน คลิปที่สองเปิดด้วย <i>"เมนูนี้ไม่ควรอร่อยเลยนะ..."</i> — คนดูสงสัยว่าทำไม เลยอยู่ดูต่อ</p>
+        <p>นี่คือสิ่งที่ Dominik จาก Creator Mentorship เจอ หลังวิเคราะห์ hook กว่า 1,000 อัน: คลิปที่คนดูไม่เลื่อนผ่าน ไม่ใช่เพราะตลกกว่าหรือภาพสวยกว่า แต่เพราะ <b>ทิ้งคำถามค้างใจไว้ก่อน แล้วยังไม่รีบตอบ</b> พอคนดูรู้สึกว่ารู้ครบแล้ว สมองจะสั่งเลื่อนทันที</p>
+      </div>
+
+      <p class="section-label">3 ข้อผิดพลาดที่พบบ่อยที่สุด</p>
+      <div class="mistake-grid">
+        <div class="mistake-card">
+          <div class="label">ไม่มีที่มา</div>
+          <p>พูดประโยคเด็ดทันทีโดยไม่บอกว่าอยู่ที่ไหน เช่น เปิดคลิปด้วย "ห้ามกินเมนูนี้ตอนเที่ยง" โดยไม่มีภาพร้านให้เห็นเลย คนดูงงมากกว่าอยากรู้ เลยเลื่อนผ่าน</p>
+        </div>
+        <div class="mistake-card">
+          <div class="label">พูดกับทุกคน</div>
+          <p>เช่น "ใครชอบชานมบ้าง" กว้างเกินไปจนไม่ถึงใครจริงๆ เทียบกับ "คนที่สั่งชานมแล้วผิดหวังทุกร้าน" ซึ่งเจาะจงกว่ามาก คนที่ตรงกลุ่มจะรู้สึกว่าพูดกับตัวเองอยู่</p>
+        </div>
+        <div class="mistake-card">
+          <div class="label">เฉลยเร็วเกินไป</div>
+          <p>เช่น พูดเลยว่า "ไอโฟนรุ่นนี้ลดเหลือหมื่นเดียว" ตั้งแต่วินาทีแรก ทั้งที่ราคาควรเก็บไว้เป็นตอนจบ ไม่ใช่บอกตั้งแต่ต้น</p>
+        </div>
+      </div>
+
+      <p class="section-label">4 คำถามก่อนกดโพสต์ <span style="font-weight:400; color:var(--muted); text-transform:none; letter-spacing:0;">— ลองตอบด้วยตัวอย่างร้านกาแฟข้างบน</span></p>
+      <div class="checklist">
+        <div class="check-item">
+          <span class="n">1</span>
+          <div><b>เขียนให้ใคร</b><span>เช่น "คนที่สั่งกาแฟหวานแล้วรู้สึกผิด" ไม่ใช่ "คนที่ชอบกาแฟทุกคน" — ถ้าตอบไม่ได้ว่าเป็นใครคนเดียว hook จะกว้างเกินไป</span></div>
+        </div>
+        <div class="check-item">
+          <span class="n">2</span>
+          <div><b>ทิ้งคำถามอะไรไว้ในใจคนดู</b><span>เช่น "ทำไมเมนูนี้ไม่ควรอร่อย" — ต้องมีคำถามที่คนดูอยากรู้คำตอบ ไม่ใช่บอกหมดตั้งแต่แรก</span></div>
+        </div>
+        <div class="check-item">
+          <span class="n">3</span>
+          <div><b>เฟรมแรกบอกที่มาพอไหม</b><span>เช่น ต้องเห็นว่าอยู่ในร้านกาแฟ ไม่ใช่พูดลอยๆ ไม่มีภาพประกอบ คนที่ไม่เคยเห็นเพจนี้ต้องเข้าใจใน 1 วินาทีว่ากำลังดูอะไร</span></div>
+        </div>
+        <div class="check-item">
+          <span class="n">4</span>
+          <div><b>เก็บไพ่ใบเด็ดไว้เฉลยทีหลังหรือยัง</b><span>เช่น เก็บคำว่า "ใส่พริกไทยดำ" ไว้เป็นวินาทีสุดท้าย ไม่บอกตั้งแต่ต้น สิ่งที่น่าสนใจที่สุดต้องอยู่ท้ายคลิป</span></div>
+        </div>
+      </div>
+
+      <p class="section-label">สรุปตัวอย่างร้านกาแฟเป็นภาพ</p>
+      <div class="ba-compare">
+        <div class="ba-card before">
+          <div class="k">ก่อนแก้ — 4 ข้อไม่ผ่านเลย</div>
+          <p class="line">"ลาเต้บลูเบอร์รี่วนิลา น้ำแข็ง"</p>
+          <p class="why">บอกหมดตั้งแต่ประโยคแรก คนดูรู้ครบ ไม่มีอะไรให้ค้างใจ ไม่ต้องดูต่อ</p>
+        </div>
+        <div class="arrow">→</div>
+        <div class="ba-card after">
+          <div class="k">หลังแก้ — ผ่านครบ 4 ข้อ</div>
+          <p class="line">"เมนูนี้ไม่ควรอร่อยเลยนะ..."</p>
+          <p class="why">ทิ้งคำถาม "ทำไมไม่ควรอร่อย" ไว้ ส่วนผสมกลายเป็นตอนเฉลยท้ายคลิป ไม่ใช่ตอนเปิด</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <b>ทีมลองเองได้ง่ายๆ:</b> เขียน hook 3-5 แบบสำหรับไอเดียเดียวกัน ถ่ายครั้งเดียว แต่ตัดต่อ 3 วินาทีแรกใหม่ทุกแบบ แล้วโพสต์แยกกัน รอ 3 วันแล้วดูว่าคลิปไหนคนดูอยู่นานกว่า — อย่าดูแค่ยอดวิว เพราะยอดวิวสูงได้แม้คนดูแค่ 1 วินาทีแล้วเลื่อนหนี
+      </div>
+
+      <p class="section-label">7 แบบ Hook ที่ใช้บ่อย <span style="font-weight:400; color:var(--muted); text-transform:none; letter-spacing:0;">— เลือกแบบให้เหมาะกับไอเดีย ไม่ต้องใช้ทุกแบบในคลิปเดียว</span></p>
+
+      <p class="hook-group-label">หมวด 1 — Hook ด้วยคำพูด (Verbal Hook)</p>
+      <div class="hook-type-grid">
+        <div class="hook-type-card">
+          <p class="name">คำถามจี้จุด (Question Hook)</p>
+          <p class="ex">เจาะคำถามที่คนดูสงสัยอยู่แล้วตรงๆ เช่น <b>"คุณเคยสงสัยมั้ยว่า ทำไมร้านนี้คนต่อคิวยาวทุกเสาร์-อาทิตย์?"</b></p>
+        </div>
+        <div class="hook-type-card">
+          <p class="name">ท้าทายความเชื่อ (Bold Statement)</p>
+          <p class="ex">พูดขัดกับความเชื่อเดิมให้คนอยากรู้เหตุผล เช่น <b>"ลดราคาเยอะๆ ไม่ได้แปลว่าคนจะแห่มาซื้อเสมอไป"</b></p>
+        </div>
+        <div class="hook-type-card">
+          <p class="name">จี้จุดกลัว/เตือนสติ (Negative Hook)</p>
+          <p class="ex">บอกผลเสียที่คนดูไม่อยากเจอ เช่น <b>"หยุดจอดรถแบบนี้ ถ้าไม่อยากโดนล็อกล้อ"</b></p>
+        </div>
+        <div class="hook-type-card">
+          <p class="name">แจกสูตร/ความลับ (How-to / Secret Hook)</p>
+          <p class="ex">บอกผลลัพธ์หรือประโยชน์ที่จะได้ทันที เช่น <b>"3 ร้านลับในห้างที่คนไทยไม่ค่อยรู้ แต่นักท่องเที่ยวมาทุกครั้ง"</b></p>
+        </div>
+      </div>
+
+      <p class="hook-group-label">หมวด 2 — Hook ด้วยภาพและการเคลื่อนไหว (Visual & Action Hook)</p>
+      <div class="hook-type-grid">
+        <div class="hook-type-card">
+          <p class="name">การกระทำ (Action Hook)</p>
+          <p class="ex">เริ่มคลิปด้วยการทำอะไรแปลกทันที เช่น ฉีกถุงขนมดังๆ หน้ากล้อง หรือชี้ไปที่ป้ายราคาแบบไม่พูดอะไร</p>
+          <span class="note">ตัวอย่างประกอบ</span>
+        </div>
+        <div class="hook-type-card">
+          <p class="name">ภาพสะดุดตา (Visual Hook)</p>
+          <p class="ex">ซูมกล้องเข้าจุดเด่นอย่างรวดเร็ว (เช่น ควันลอยจากอาหาร) หรือตัดเปลี่ยนมุมกล้องกะทันหันในวินาทีแรก</p>
+          <span class="note">ตัวอย่างประกอบ</span>
+        </div>
+        <div class="hook-type-card">
+          <p class="name">ข้อความพาดหัว (Text Overlay)</p>
+          <p class="ex">ใส่ตัวอักษรใหญ่กลางจอตั้งแต่เฟรมแรก เช่น <b>"ที่จอดรถฟรี 3 ชม. แบบนี้!"</b> บอกประโยชน์ทันทีโดยไม่ต้องรอฟัง</p>
+        </div>
+      </div>
+
+      <div class="prod-checklist" id="pc-1-1">
+        <div class="pc-head"><b>เช็กก่อนกดโพสต์ Hook</b><span class="pc-count"></span></div>
+        <label class="pc-item"><input type="checkbox" data-k="type"><span>เลือกแบบ Hook (คำพูด/ภาพ) แล้ว ตรงกับเนื้อหาไหม</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="who"><span>ระบุคนดูคนเดียวในใจได้ชัดเจน ไม่ใช่ "ทุกคน"</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="loop"><span>ทิ้งคำถามไว้ ไม่เฉลยตั้งแต่ต้น</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="context"><span>เฟรมแรกมีที่มาพอให้คนแปลกหน้าเข้าใจใน 1 วิ</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="save"><span>เก็บไพ่ใบเด็ดไว้เฉลยตอนจบ ไม่บอกหมดตั้งแต่ต้น</span></label>
+      </div>
+
+      <div class="source-note">แหล่งอ้างอิง: สรุปจาก Postiz Blog ที่วิเคราะห์เนื้อหาของวิดีโอ "I Studied 1,000 Hooks" — ไม่ใช่ transcript ต้นฉบับ เพราะดึงจาก YouTube ไม่สำเร็จ · หมวดหมู่ Hook 7 แบบ สรุปรวมจากบทความ/โพสต์ภาษาไทยหลายแหล่ง (Admeadme, SME One Thailand, ครูนฤมล, พ่อมด TikTok, TikTok @lek.oncamera) เป็นการจัดหมวดที่ใช้กันในวงการครีเอเตอร์ไทย ไม่ใช่งานวิจัยที่มีต้นทางเดียว</div>
+
+      <div class="progress-nav">
+        <button disabled>← ก่อนหน้า</button>
+        <button class="primary" onclick="M1.go(2)">ต่อไป: Story Dance →</button>
+      </div>
+    </div>
+
+    <!-- ---- 1.2 STORY DANCE ---- -->
+    <div id="sub-1-2" class="subview">
+      <div class="badge-row">
+        <span class="tag verified">ยืนยันจากต้นทาง — กฎ But/Therefore</span>
+        <span class="tag secondary">แหล่งรอง — 6 บทเรียนอื่นสรุปจากบล็อกวิเคราะห์วิดีโอ</span>
+      </div>
+
+      <div class="lead-block">
+        <h3>ดูแลช่วงกลางคลิป ทำไมคนดูอยู่ต่อ</h3>
+        <p>ลองอ่านสองแบบนี้ แบบแรก: <i>"เดินเข้าห้าง แล้วก็ขึ้นชั้น 3 แล้วก็ซื้อกาแฟ แล้วก็เดินกลับที่จอดรถ"</i> — เล่าไปเรื่อยๆ ไม่มีอะไรให้ลุ้น แบบที่สอง: <i>"ตั้งใจมาซื้อของขวัญวันเกิดแม่ แต่ร้านที่หมายตาไว้ปิดปรับปรุง ดังนั้นต้องหาทางเลือกใหม่ใน 20 นาที"</i> — มีปัญหาให้ลุ้นว่าจะแก้ยังไง</p>
+        <p>นี่คือกฎที่ Trey Parker กับ Matt Stone ผู้สร้าง South Park สอนไว้ที่ NYU: ถ้าเรื่องต่อกันด้วยคำว่า <b>"แล้วก็..."</b> ตลอด เรื่องจะน่าเบื่อ ต้องต่อด้วย <b>"แต่"</b> (มีปัญหาแทรก) หรือ <b>"ดังนั้น"</b> (นำไปสู่อะไรต่อ) แทน</p>
+      </div>
+
+      <p class="section-label">ตัวอย่างที่ 1: คลิปพาซื้อของในศูนย์การค้า</p>
+      <div class="beat-row">
+        <div class="beat weak"><span class="conn">แล้วก็...</span>เดินเข้าห้าง</div>
+        <div class="beat weak"><span class="conn">แล้วก็...</span>ไปชั้น 3</div>
+        <div class="beat weak"><span class="conn">แล้วก็...</span>ซื้อกาแฟ</div>
+        <div class="beat weak"><span class="conn">แล้วก็...</span>เดินกลับที่จอดรถ</div>
+      </div>
+      <p class="muted" style="margin:-8px 0 18px; font-size:13px;">ไล่เหตุการณ์เรียบๆ คนดูหลุดกลางทางแน่นอน</p>
+
+      <div class="beat-row">
+        <div class="beat"><span class="conn">ตั้งใจ</span>มาซื้อของขวัญวันเกิดแม่</div>
+        <div class="beat"><span class="conn">แต่</span>ร้านที่หมายตาไว้ปิดปรับปรุง</div>
+        <div class="beat"><span class="conn">ดังนั้น</span>ต้องหาทางเลือกใหม่ใน 20 นาที</div>
+        <div class="beat"><span class="conn">แต่</span>เจอร้านที่ไม่เคยสังเกตมาก่อน</div>
+      </div>
+      <p class="muted" style="margin-top:-8px; font-size:13px;">มีปัญหาแทรกทุกจังหวะ คนดูต้องอยู่ดูว่าจะแก้ปัญหายังไง</p>
+
+      <div class="callout teal" style="margin-top:14px;">
+        <b>เรื่องเดียวกันนี้ยังไม่จบ</b> — ต่อจากที่ "เจอร้านที่ไม่เคยสังเกตมาก่อน" ด้านบน ลองดูว่า 4 เรื่องด้านล่าง (A-D) ใช้เล่าเรื่องต่อจากจุดนี้ต่อไปยังไงให้ครบทั้งคลิป ไม่ใช่คนละเรื่องกัน
+      </div>
+
+      <p class="section-label">ตัวอย่างที่ 2: คลิปรีวิวสินค้า IT ในศูนย์การค้า</p>
+      <div class="beat-row">
+        <div class="beat weak"><span class="conn">แล้วก็...</span>แกะกล่อง</div>
+        <div class="beat weak"><span class="conn">แล้วก็...</span>เสียบสาย</div>
+        <div class="beat weak"><span class="conn">แล้วก็...</span>ทดสอบเสียง</div>
+        <div class="beat weak"><span class="conn">แล้วก็...</span>สรุปข้อดี</div>
+      </div>
+      <p class="muted" style="margin:-8px 0 18px; font-size:13px;">รีวิวแบบนี้ดูเหมือนโฆษณา คนดูข้ามไปเพราะรู้ว่าจะพูดว่าดีอยู่แล้ว</p>
+
+      <div class="beat-row">
+        <div class="beat"><span class="conn">ตั้งใจ</span>ซื้อหูฟังตัดเสียงมาใช้บนรถไฟฟ้า</div>
+        <div class="beat"><span class="conn">แต่</span>ใส่แล้วเสียงรถไฟฟ้ายังดังเหมือนเดิม</div>
+        <div class="beat"><span class="conn">ดังนั้น</span>ลองสลับโหมดตัดเสียงอีกแบบ</div>
+        <div class="beat"><span class="conn">แต่</span>เสียงประกาศสถานีกลับหายไปด้วย</div>
+      </div>
+      <p class="muted" style="margin-top:-8px; font-size:13px;">มีปัญหาจริงที่คนซื้อของเจอ คนดูรู้สึกว่าเป็นรีวิวจริง ไม่ใช่โฆษณา</p>
+
+      <p class="section-label">อีก 4 เรื่อง — ต่อเรื่อง "ของขวัญวันเกิดแม่" จากตัวอย่างที่ 1 (ตัดเรื่อง Hook ออกแล้ว เพราะซ้ำกับ 1.1)</p>
+      <div class="checklist">
+        <div class="check-item">
+          <span class="n">A</span>
+          <div><b>มีจังหวะ สั้น-ยาวสลับกัน</b><span>เข้าไปในร้านที่เจอ: <i>"เงียบ. ไม่มีลูกค้าเลยสักคน. แต่พอเดินเข้าไปดูของด้านในเท่านั้นแหละ ถึงเข้าใจว่าทำไมร้านนี้ไม่ต้องพึ่งคนเดินผ่านหน้าร้าน"</i> — สองประโยคสั้นก่อน แล้วตามด้วยประโยคยาว ให้จังหวะเหมือนหยุดหายใจก่อนเฉลย ถ้าทุกประโยคยาวเท่ากันหมด คนดูจะเผลอหลุดความสนใจ</span></div>
+        </div>
+        <div class="check-item">
+          <span class="n">B</span>
+          <div><b>พูดแบบคุยกับเพื่อน</b><span>เล่าร้านเดียวกันนี้สองแบบ: <i>"ทางร้านมีสินค้าหลากหลายให้เลือกชม"</i> (ทางการ) กับ <i>"ร้านนี้ของเน้นๆ เพียบเลย ไม่ได้พูดเกินจริง"</i> (คุยกับเพื่อน) — แบบหลังทำให้คนดูรู้สึกเหมือนเพื่อนมาบอกเคล็ดลับ ไม่ใช่โฆษณา</span></div>
+        </div>
+        <div class="check-item">
+          <span class="n">C</span>
+          <div><b>คิดตอนจบก่อนเขียนตอนต้น</b><span>รู้แล้วว่าอยากจบคลิปด้วยภาพแม่ยิ้มตอนแกะของขวัญ เลยวางแผนถ่ายช็อตแกะกล่องช้าๆ เก็บไว้เป็นวินาทีสุดท้าย แล้วค่อยเขียนสคริปต์ย้อนกลับมาว่าจะพาคนดูไปถึงจุดนั้นยังไง</span></div>
+        </div>
+        <div class="check-item">
+          <span class="n">D</span>
+          <div><b>หามุมเฉพาะของเรื่อง</b><span>ร้านนี้ไม่ใช่แค่ "ร้านขายของขวัญ" ทั่วไป แต่คือ <i>"ร้านที่เจ้าของเลือกของเองทุกชิ้นจากตลาดนัดต่างจังหวัด"</i> — มุมนี้อธิบายได้ว่าทำไมของถึงไม่เหมือนร้านของขวัญอื่นในห้าง ถ้าตอบไม่ได้ว่ามุมไหนต่าง คลิปจะดูเหมือนโฆษณาทั่วไป</span></div>
+        </div>
+      </div>
+      <p class="muted" style="font-size:12.5px; margin-top:-6px;">รวมกันทั้ง 4 ข้อ = สคริปต์เดียวที่ต่อกันตั้งแต่ต้นจนจบ ไม่ใช่ตัวอย่างแยกส่วนคนละเรื่อง</p>
+
+      <div class="callout teal">
+        <b>ใช้ตรวจสคริปต์ทีมได้เลย:</b> อ่านสคริปต์แล้วลองใส่คำว่า "แล้วก็" คั่นระหว่างประโยค ถ้าใส่ได้โดยความหมายไม่เพี้ยน แปลว่าจังหวะนั้นยังไม่มีปัญหาแทรก ต้องแก้ก่อนถ่าย
+      </div>
+
+      <div class="prod-checklist" id="pc-1-2">
+        <div class="pc-head"><b>เช็กก่อนถ่ายสคริปต์</b><span class="pc-count"></span></div>
+        <label class="pc-item"><input type="checkbox" data-k="but"><span>ระหว่างจังหวะใช้ "แต่/ดังนั้น" ไม่ใช่ "แล้วก็"</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="rhythm"><span>มีจังหวะประโยคสั้น-ยาวสลับกัน ไม่ใช่ยาวเท่ากันหมด</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="tone"><span>น้ำเสียงเหมือนคุยกับเพื่อน ไม่ใช่ภาษาเขียนทางการ</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="end"><span>รู้ตอนจบที่อยากให้คนดูรู้สึก/ทำ ก่อนเริ่มเขียนสคริปต์</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="angle"><span>มีมุมเฉพาะที่ต่างจากคลิปห้างอื่น ไม่ใช่แค่โฆษณาทั่วไป</span></label>
+      </div>
+
+      <div class="source-note">แหล่งอ้างอิง: คำบรรยายของ Trey Parker และ Matt Stone ที่ NYU (2014, เผยแพร่ซ้ำโดย Speakola และ David Perell) ยืนยันได้จากหลายแหล่งตรงกัน — ส่วน 6 บทเรียนอื่นสรุปจากบล็อกที่วิเคราะห์วิดีโอ "How To Become A Master Storyteller" ไม่ใช่ transcript ต้นฉบับ</div>
+
+      <div class="progress-nav">
+        <button onclick="M1.go(1)">← ก่อนหน้า</button>
+        <button class="primary" onclick="M1.go(3)">ต่อไป: โครงทั้งคลิป →</button>
+      </div>
+    </div>
+
+    <!-- ---- 1.3 WHOLE CLIP ---- -->
+    <div id="sub-1-3" class="subview">
+      <div class="badge-row">
+        <span class="tag secondary">ประมาณการ/แหล่งรอง — ดัดแปลงจากแนวคิดของ Alex Hormozi</span>
+      </div>
+
+      <div class="lead-block">
+        <h3>โครงประกอบทั้งคลิป — ไม่สอน Hook ซ้ำ</h3>
+        <p>ลองเทียบสองแบบนี้ พูดเรื่องเดียวกันคือ "บิงซูร้านนี้ไม่หวานเลี่ยน":</p>
+        <p><b>แบบพูดรวดเดียว:</b> <span class="muted">"บิงซูร้านนี้ใช้น้ำเชื่อมสูตรพิเศษที่คิดเองมา 2 ปี ผสมนมข้นหวานคุณภาพสูง เลยไม่หวานเลี่ยน มาชิมได้ชั้น 3 ค่ะ"</span> — จบใน 5 วิ คนดูรู้หมดตั้งแต่ต้น เลื่อนผ่าน</p>
+        <p><b>แบบแบ่งจังหวะ:</b> <span class="muted">"ทำไมบิงซูร้านนี้หวานน้อยลงทั้งที่ราดน้ำเชื่อมเยอะขนาดนี้..." (เปิดคำถาม) → "เพราะน้ำเชื่อมสูตรนี้คิดเอง ลองผิดลองถูกมา 2 ปี..." (คลี่ทีละนิด) → "แต่ความลับจริงๆ ไม่ใช่น้ำเชื่อม มันอยู่ที่นมข้นหวานที่เลือกแบบเฉพาะ" (เฉลย)</span> — คนดูอยากรู้ต่อทุกจังหวะ</p>
+        <p>แบบที่สองคือสิ่งที่ Alex Hormozi เรียกว่า <b>Hook, Retain, Reward</b> — เวอร์ชันที่ใช้กันในวงการคลิปสั้นตอนนี้เป็นการปรับใช้ของนักปฏิบัติหลายคน ไม่ได้มาจากคนคนเดียว โมดูลนี้ใช้เป็น <b>โครงประกอบ</b> เท่านั้น — ช่อง Hook ให้ไปดูรายละเอียดที่ 1.1 ส่วนนี้เน้นเฉพาะ Retain และ Reward ที่ไม่ซ้ำ</p>
+      </div>
+
+      <div class="stage-track">
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>Hook — 0-3 วิ</div>
+          <p>รายละเอียดทั้งหมดอยู่ที่โมดูล 1.1 แล้ว</p>
+          <p class="good">→ ดู Hook 4 คำถาม</p>
+        </div>
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>Retain — ช่วงกลาง</div>
+          <p>จ่ายผลตอบแทนทีละจังหวะ ไม่ใช่อธิบายรวดเดียว</p>
+          <p class="good">"น้ำเชื่อมคิดเอง 2 ปี" → เปิดคำถามใหม่ทันที "แต่ความลับจริงๆ ไม่ใช่อันนี้"</p>
+          <p class="bad">พูดสูตรทั้งหมดรวดเดียวตั้งแต่ต้น คนดูรู้ครบใน 5 วิ</p>
+        </div>
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>Reward — ตอนจบ</div>
+          <p>เฉลยที่ตรงกับคำถามที่เปิดไว้ตั้งแต่ hook แล้วค่อยตาม CTA</p>
+          <p class="good">เฉลยนมข้นหวาน → โชว์หน้าตัดบิงซู → "มาชิมได้ชั้น 3"</p>
+          <p class="bad">จบด้วย "แวะมาชิมนะคะ" เฉยๆ โดยไม่เฉลยว่าทำไมอร่อย</p>
+        </div>
+      </div>
+
+      <p class="section-label">ข้อควรระวังสำคัญ (สำหรับ Brief ทีม)</p>
+      <div class="callout gold">
+        โครงนี้ช่วยแค่ "ถือความสนใจ" ไว้ให้นานพอ ถ้าไอเดียตั้งต้นไม่มีอะไรน่าเฉลยจริงๆ (เช่นบิงซูร้านนี้จริงๆ ไม่ได้ต่างจากร้านอื่น) ต่อให้ตัดจังหวะเก่งแค่ไหนก็ไม่ช่วย และถ้าพูด "รอดูตอนจบนะ" เหมือนกันทุกคลิป คนดูจะจับทางได้แล้วเลิกเชื่อ
+      </div>
+
+      <p class="section-label">เทมเพลตสำหรับ Brief งานจริง</p>
+      <div class="lead-block" style="background:var(--surface-soft);">
+        <p class="muted" style="margin-bottom:8px;"><b>ตัวอย่างที่กรอกแล้ว (บิงซูร้าน X)</b></p>
+        <p><b>Hook (0-3วิ):</b> ทำไมบิงซูร้านนี้ไม่หวานเลี่ยนทั้งที่ราดน้ำเชื่อมเยอะขนาดนี้</p>
+        <p><b>Retain beat 1:</b> น้ำเชื่อมสูตรนี้คิดเอง ลองผิดลองถูกมา 2 ปี &nbsp; <b>beat 2:</b> แต่ความลับจริงๆ ไม่ได้อยู่ที่น้ำเชื่อม &nbsp; <b>beat 3:</b> มันอยู่ที่นมข้นหวานที่เลือกแบบเฉพาะ</p>
+        <p><b>Reward:</b> โชว์หน้าตัดบิงซู บอกสัดส่วนที่ลงตัว &nbsp; <b>CTA (พูดหลังเฉลยเท่านั้น):</b> มาชิมได้ชั้น 3 โซน Food Court วันนี้ถึงสิ้นเดือน</p>
+      </div>
+      <div class="lead-block" style="background:var(--surface-soft); margin-top:10px;">
+        <p class="muted" style="margin-bottom:8px;"><b>เทมเพลตเปล่า (เอาไปกรอกงานจริง)</b></p>
+        <p><b>Hook (0-3วิ):</b> _______________ <span class="muted">(เช็คกับ 4 คำถามในโมดูล 1.1 ก่อน)</span></p>
+        <p><b>Retain beat 1:</b> _______________ <b>beat 2:</b> _______________ <b>beat 3:</b> _______________</p>
+        <p><b>Reward:</b> _______________ <b>CTA (พูดหลังเฉลยเท่านั้น):</b> _______________</p>
+      </div>
+
+      <div class="prod-checklist" id="pc-1-3">
+        <div class="pc-head"><b>เช็กก่อนโพสต์คลิปเต็ม</b><span class="pc-count"></span></div>
+        <label class="pc-item"><input type="checkbox" data-k="hookok"><span>Hook ผ่านเช็กลิสต์ในโมดูล 1.1 แล้ว</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="beats"><span>Retain มีอย่างน้อย 2-3 จังหวะ ไม่อธิบายรวดเดียว</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="newloop"><span>ทุกจังหวะ Retain เปิดคำถามใหม่ทันทีหลังตอบคำถามเก่า</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="reward"><span>Reward เฉลยตรงกับคำถามที่เปิดไว้ตั้งแต่ Hook</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="cta"><span>CTA พูดหลังเฉลยเท่านั้น ไม่ใช่พูดแทนเฉลย</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="idea"><span>ไอเดียตั้งต้นน่าสนใจพอจริงๆ ไม่ได้พึ่งจังหวะอย่างเดียว</span></label>
+      </div>
+
+      <div class="source-note">แหล่งอ้างอิง: แนวคิด Hook-Retain-Reward ของ Alex Hormozi (หนังสือ $100M Leads) ปรับใช้กับโครงสร้างคลิปสั้นโดยนักปฏิบัติหลายราย ไม่มีต้นทางที่ยืนยันน้ำหนักหรือสัดส่วนเวลาที่แน่นอนของแต่ละช่วง</div>
+
+      <div class="progress-nav">
+        <button onclick="M1.go(2)">← ก่อนหน้า</button>
+        <button class="primary" onclick="Router.go('m2')">ต่อไป: ตัวอย่างตามหมวด →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MODULE 2 ============ -->
+  <section id="view-m2" class="view">
+    <div class="m1-header">
+      <p class="eyebrow">โมดูล 02</p>
+      <h2>ตัวอย่างตามหมวด × Platform</h2>
+      <p>แต่ละหมวดมี <b>1 ไอเดียหลัก</b> ที่ประกอบด้วย 3 framework จากโมดูล 1 แล้วปรับ <b>3 แบบ</b> ตาม IG Reels, TikTok, FB Reels — คนละแบบ ไม่ใช่คลิปเดียวโพสต์ซ้ำทุกที่</p>
+      <p style="margin-top:8px;"><b>ใช้กับหมวดอื่นได้ทั้งหมด:</b> 4 หมวดด้านล่างเป็นตัวอย่างวิธีคิด ไม่ใช่รายชื่อหมวดที่ใช้ได้แค่นี้ — เอาวิธีคิดแบบเดียวกัน (Hook → แต่/ดังนั้น → เฉลย แล้วปรับ 3 แบบตาม platform) ไปทำกับหมวดร้านอื่นในห้างได้เลย เช่น แฟชั่น ความงาม ของเด็ก บ้าน บันเทิง ธนาคาร/บริการ</p>
+    </div>
+
+    <p class="section-label">คู่มือเลือกแพลตฟอร์ม — เหมาะกับใคร ทำยังไงให้ engagement ดี <span style="font-weight:400; color:var(--muted); text-transform:none; letter-spacing:0;">— อ่านก่อนเลือกว่าไอเดียไหนควรลงแพลตฟอร์มไหนเป็นหลัก</span></p>
+    <div class="badge-row">
+      <span class="tag secondary">ประมาณการ/แหล่งรอง — ตัวเลขจากรายงานอุตสาหกรรม ไม่ใช่แพลตฟอร์มประกาศเอง</span>
+    </div>
+    <div class="plat-guide-grid">
+      <div class="plat-guide-card">
+        <p class="pg-name"><span class="dot"></span>Instagram Reels</p>
+        <p class="pg-stat">~20.6 ล้านบัญชีในไทย · ใช้เวลาเฉลี่ย 48 นาที/วัน</p>
+        <p class="pg-label">เหมาะกับใคร</p>
+        <ul>
+          <li>ผู้หญิงเข้าถึงง่ายกว่าผู้ชาย (โฆษณาเข้าถึงผู้หญิง 37.5% vs ผู้ชาย 29.8%)</li>
+          <li>ฐานผู้ใช้เล็กสุดในกลุ่มแต่มีกำลังซื้อ เหมาะกับแบรนด์ที่เน้นภาพสวย พรีเมียม</li>
+        </ul>
+        <p class="pg-label">Tips ที่ใช้ได้จริง</p>
+        <ul>
+          <li>Carousel และ Reels ได้ engagement สูงกว่าโพสต์รูปเดี่ยว 44%</li>
+          <li>"แชร์" เป็นตัวชี้วัดหลักแทนไลก์แล้ว (organic reach ลด 30-40% แต่แชร์พุ่ง 150%) — ทำคอนเทนต์ที่คนอยากส่งต่อ ไม่ใช่แค่กดไลก์</li>
+          <li>ปิดท้ายด้วยจุดที่ชวนแชร์ เช่น เคล็ดลับที่คนอยากบอกต่อเพื่อน</li>
+        </ul>
+        <p class="pg-label">ช่วงเวลาที่ควรโพสต์</p>
+        <ul>
+          <li>วันพุธ-พฤหัสฯ เอนเกจสูงสุดในสัปดาห์ (พุธเที่ยง, พุธ 18:00, พฤหัสฯ เช้า 9:00)</li>
+          <li>เฉพาะ Reels: ช่วงเย็น-ค่ำ 18:00-23:00 ทำผลงานดีกว่าช่วงอื่นชัดเจน เพราะคนมีเวลาดูหลังเลิกงาน</li>
+          <li>เลี่ยงศุกร์-เสาร์ เอนเกจต่ำสุดในกลุ่ม 7 วัน</li>
+        </ul>
+      </div>
+      <div class="plat-guide-card">
+        <p class="pg-name"><span class="dot"></span>TikTok</p>
+        <p class="pg-stat">~56.6 ล้านบัญชีในไทย (มากสุด) · ผู้ติดตามโต 200% เทียบปี 2024</p>
+        <p class="pg-label">เหมาะกับใคร</p>
+        <ul>
+          <li>ฐานผู้ใช้ใหญ่สุดในไทย เหมาะกับแบรนด์ที่อยากขยายฐานลูกค้าใหม่ ไม่ใช่แค่รักษาฐานเดิม</li>
+          <li>ผู้หญิงเข้าถึงเยอะกว่าผู้ชายชัดเจน</li>
+        </ul>
+        <p class="pg-label">Tips ที่ใช้ได้จริง</p>
+        <ul>
+          <li>70%+ ของยอดวิวมาจากหน้า For You ไม่ใช่จากผู้ติดตาม — ฟอลน้อยก็ดังได้ถ้าคลิปดี</li>
+          <li>ปี 2026 ยอดวิวเฉลี่ยลด 23% เพราะคอนเทนต์ล้นตลาด อัลกอริทึมให้น้ำหนักการดูจนจบ/เวลาที่ใช้ดู มากกว่ายอดวิว</li>
+          <li>โฟกัสคอมเมนต์กับแชร์มากกว่าไลก์ ลองตั้งคำถามท้ายคลิปแบบ "เห็นด้วยมั้ย?"</li>
+          <li>ใช้สูตร 70/30: 70% ทำฟอร์แมตที่เคยเวิร์ก อีก 30% ลองมุมใหม่</li>
+        </ul>
+        <p class="pg-label">ช่วงเวลาที่ควรโพสต์</p>
+        <ul>
+          <li>ช่วงเย็น-ค่ำ 18:00-23:00 เอนเกจสูงสุดในเกือบทุกวัน ส่วนช่วงบ่าย 12:00-17:00 มักแย่ที่สุด</li>
+          <li>วันเสาร์ทำผลงานดีที่สุดโดยรวม รองลงมาคือจันทร์และอาทิตย์ — วันธรรมดากลางสัปดาห์ (อังคาร-พฤหัสฯ) ช่วงบ่ายมักเงียบสุด</li>
+        </ul>
+      </div>
+      <div class="plat-guide-card">
+        <p class="pg-name"><span class="dot"></span>Facebook Reels</p>
+        <p class="pg-stat">~51.5 ล้านบัญชีในไทย · ใช้เวลาเฉลี่ย 57 นาที/วัน</p>
+        <p class="pg-label">เหมาะกับใคร</p>
+        <ul>
+          <li>กลุ่มอายุ 25-44 ปี ซึ่งใช้โซเชียลหนักสุดโดยรวม และมักตัดสินใจซื้อจริงจัง ไม่ใช่แค่ไถเล่น</li>
+          <li>เหมาะกับคอนเทนต์ที่ต้องให้ข้อมูลครบก่อนตัดสินใจ เช่น ราคา ที่ตั้ง โปรโมชั่น</li>
+        </ul>
+        <p class="pg-label">Tips ที่ใช้ได้จริง</p>
+        <ul>
+          <li>Live Video ได้ engagement สูงกว่าโพสต์ลิงก์ 4 เท่า สูงกว่าโพสต์รูปนิ่ง 6 เท่า</li>
+          <li>ค่าโฆษณาแพงกว่า TikTok แต่ยังคุ้มถ้าเน้นตำแหน่ง Feed</li>
+          <li>แคปชันยาวกว่าแพลตฟอร์มอื่นได้ เพราะกลุ่มนี้อ่านก่อนตัดสินใจ</li>
+        </ul>
+        <p class="pg-label">ช่วงเวลาที่ควรโพสต์</p>
+        <ul>
+          <li>วันอังคาร-พุธ ช่วง 12:00-20:00 เป็นช่วงพีคที่สุด จันทร์เที่ยง และพฤหัสฯ เที่ยง+20:00 ก็ทำผลงานดี</li>
+          <li>กลุ่มค้าปลีก/ห้างสรรพสินค้าโดยเฉพาะ: รายงานเดียวกันชี้ว่า 09:00-13:00 วันจันทร์-พุธ เอนเกจสูงสุดในกลุ่มธุรกิจนี้ — ตรงกับพฤติกรรมคนก่อนเข้างาน/พักเที่ยงมากกว่าธุรกิจอื่น</li>
+          <li>เลี่ยงเสาร์-อาทิตย์ เอนเกจต่ำเกือบทุกอุตสาหกรรม</li>
+        </ul>
+      </div>
+    </div>
+    <div class="source-note" style="margin-top:4px;">แหล่งอ้างอิง: ตัวเลข engagement/ค่าโฆษณา จาก MarketThink — <a href="https://www.marketthink.co/71134" target="_blank" rel="noopener">สรุป 5 อินไซต์โซเชียลมีเดีย 2026</a> และ <a href="https://www.marketthink.co/73419" target="_blank" rel="noopener">สรุปอินไซต์ TikTok 2026</a> ซึ่งสรุปจากรายงานอุตสาหกรรมหลายแหล่ง ไม่ใช่ตัวเลขที่แพลตฟอร์มประกาศเป็นทางการ — ตัวเลขผู้ใช้ไทยและอายุ/เพศจากรายงาน We Are Social ผ่านการสรุปของ <a href="https://everydaymarketing.co/marketing-trends/thailand-social-media-stat-and-insight-2026-from-digital-report-we-are-social/" target="_blank" rel="noopener">Everyday Marketing</a> — เป็นข้อมูลปี 2026 ที่จะเปลี่ยนตามรอบรายงานถัดไป</div>
+    <div class="source-note" style="margin-top:10px;">แหล่งอ้างอิง ช่วงเวลาโพสต์ (ประมาณการ/แหล่งรอง — ข้อมูลจากบริษัทเครื่องมือ schedule โพสต์ ไม่ใช่แพลตฟอร์มประกาศเอง และเป็น "เวลาท้องถิ่นของผู้ใช้" ทั่วโลก ไม่ได้ทำแยกเฉพาะไทย): IG จาก <a href="https://buffer.com/resources/when-is-the-best-time-to-post-on-instagram/" target="_blank" rel="noopener">Buffer — วิเคราะห์โพสต์ 9.6 ล้านโพสต์</a> · TikTok จาก <a href="https://buffer.com/resources/best-time-to-post-on-tiktok/" target="_blank" rel="noopener">Buffer — วิเคราะห์โพสต์ 7.1 ล้านโพสต์</a> · FB จาก <a href="https://sproutsocial.com/insights/best-times-to-post-on-facebook/" target="_blank" rel="noopener">Sprout Social — วิเคราะห์เอนเกจเกือบ 2 พันล้านครั้งจาก 307,000 บัญชีธุรกิจ</a> — ทีมลองเทียบกับเวลาทำงาน/เวลาว่างของคนกรุงเทพฯ เองก่อนใช้จริง เพราะข้อมูลนี้ไม่ได้เจาะจงตลาดไทย</div>
+
+    <div class="subtab-row" style="margin-top:28px;">
+      <button id="tab-2-1" class="active" onclick="M2.go(1)">2.1 Food</button>
+      <button id="tab-2-2" onclick="M2.go(2)">2.2 IT</button>
+      <button id="tab-2-3" onclick="M2.go(3)">2.3 Health & Wellness</button>
+      <button id="tab-2-4" onclick="M2.go(4)">2.4 Thai Souvenir</button>
+      <button id="tab-2-5" onclick="M2.go(5)">2.5 เคสจริง</button>
+    </div>
+
+    <!-- ---- 2.1 FOOD ---- -->
+    <div id="sub-2-1" class="subview active">
+      <div class="badge-row">
+        <span class="tag example">ตัวอย่างประกอบ — ไอเดียสมมติสำหรับสอน ไม่ใช่แคมเปญจริง</span>
+      </div>
+
+      <div class="lead-block">
+        <h3>ไอเดียหลัก: เมนูลับที่ไม่มีในป้ายราคา</h3>
+        <p>ตั้งใจไปถ่ายรีวิวเมนูฮิตร้านชานมในโซนอาหาร แต่พนักงานถามกลับว่า <i>"อยากลองเมนูลับมั้ย"</i> — ทีมงานต้องถามหาคำลับถึงจะได้ชิม แล้วค่อยเฉลยว่าเมนูลับนั้นคืออะไร พร้อมบอกว่าขอได้ที่ไหน</p>
+      </div>
+
+      <p class="section-label">โครงตาม Framework โมดูล 1</p>
+      <div class="stage-track">
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>Hook</div>
+          <p>แบบ How-to/Secret Hook (ดู 1.1)</p>
+          <p class="good">"เมนูนี้สั่งได้ แต่ไม่มีในป้ายราคา..."</p>
+        </div>
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>Retain</div>
+          <p>ใช้ "แต่/ดังนั้น" แบบ 1.2</p>
+          <p class="good">ตั้งใจถ่ายเมนูฮิต <b>แต่</b>พนักงานถามกลับ <b>ดังนั้น</b>ต้องถามหาคำลับ</p>
+        </div>
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>Reward</div>
+          <p>เฉลยตรงกับคำถามที่เปิดไว้ (ดู 1.3)</p>
+          <p class="good">เฉลยเมนูลับ → "ชั้น 2 โซน Food Court ถามหาคำนี้ได้เลย"</p>
+        </div>
+      </div>
+
+      <p class="section-label">ปรับ 3 แบบตาม Platform</p>
+      <div class="stage-track">
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>IG Reels</div>
+          <p>ภาพสวย แสงดี ซูมแก้วชานมช้าๆ</p>
+          <p class="good">ข้อความซ้อนจอทันที "เมนูลับ ไม่มีในป้ายราคา" แคปชันเล่าเรื่องเต็ม ปิดท้าย "เซฟไว้ก่อนลืม 📍ชั้น 2"</p>
+        </div>
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>TikTok</div>
+          <p>คลิปดิบ ไม่ตัดต่อเนียน เสียงพูดสด</p>
+          <p class="good">เปิดด้วยเสียงพนักงานพูดจริง "อยากลองเมนูลับมั้ย" แคปชันสั้น "ใครเคยกินมั้ย 👀" ชวนคอมเมนต์ทาย</p>
+        </div>
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>FB Reels</div>
+          <p>แคปชันยาว ข้อมูลครบ</p>
+          <p class="good">บอกชื่อร้าน ชั้น เวลาเปิด ราคาโดยประมาณ ชวนแท็กเพื่อนมากินด้วยกัน</p>
+        </div>
+      </div>
+
+      <div class="source-note">ตัวอย่างประกอบ: ไอเดียและบทสนทนาที่ยกมาเป็นการสมมติเพื่อสอน ไม่ใช่แคมเปญจริงของร้านใดในเครือ — ส่วนแนวทางปรับรูปแบบตาม platform (ความยาว การใช้เสียง สไตล์แคปชัน) เป็นวิธีที่นักทำคอนเทนต์ใช้กันทั่วไป ไม่ใช่กฎที่แพลตฟอร์มประกาศเป็นทางการ (ประมาณการ/แหล่งรอง)</div>
+
+      <div class="progress-nav">
+        <button onclick="Router.go('m1')">← กลับ Framework</button>
+        <button class="primary" onclick="M2.go(2)">ต่อไป: IT →</button>
+      </div>
+    </div>
+
+    <!-- ---- 2.2 IT ---- -->
+    <div id="sub-2-2" class="subview">
+      <div class="badge-row">
+        <span class="tag example">ตัวอย่างประกอบ — ไอเดียสมมติสำหรับสอน ไม่ใช่แคมเปญจริง</span>
+      </div>
+
+      <div class="lead-block">
+        <h3>ไอเดียหลัก: หูฟังตัดเสียงเงียบจริงมั้ยบน BTS</h3>
+        <p>ต่อเรื่องเดียวกับตัวอย่างหูฟังตัดเสียงในโมดูล 1.2: ตั้งใจซื้อหูฟังตัดเสียงมาทดสอบบนรถไฟฟ้า แต่ใส่แล้วเสียงรถไฟฟ้ายังดังเหมือนเดิม จึงต้องลองสลับโหมดตัดเสียงอีกแบบ แล้วเจอว่าโหมดนั้นทำให้เสียงประกาศสถานีหายไปด้วย — จบด้วยสรุปว่าโหมดไหนใช้ได้จริง</p>
+      </div>
+
+      <p class="section-label">โครงตาม Framework โมดูล 1</p>
+      <div class="stage-track">
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>Hook</div>
+          <p>แบบ Bold Statement Hook (ดู 1.1)</p>
+          <p class="good">"หูฟังตัดเสียงราคาหมื่น ใส่บน BTS แล้วเงียบจริงมั้ย?"</p>
+        </div>
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>Retain</div>
+          <p>ใช้ "แต่/ดังนั้น" แบบ 1.2</p>
+          <p class="good">ใส่แล้ว <b>แต่</b>เสียงยังดังเหมือนเดิม <b>ดังนั้น</b>ลองสลับโหมด <b>แต่</b>เสียงประกาศสถานีหายไปด้วย</p>
+        </div>
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>Reward</div>
+          <p>เฉลยตรงกับคำถามที่เปิดไว้ (ดู 1.3)</p>
+          <p class="good">สรุปโหมดที่ใช้ได้จริง → "ลองเทสก่อนซื้อได้ชั้น 4 โซน IT"</p>
+        </div>
+      </div>
+
+      <p class="section-label">ปรับ 3 แบบตาม Platform</p>
+      <div class="stage-track">
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>IG Reels</div>
+          <p>ภาพสวย มุมถ่ายข้ามไหล่ บน BTS</p>
+          <p class="good">ข้อความซ้อนจอ "เงียบจริงมั้ย?" แคปชันเล่าผลทดสอบละเอียด ปิดท้ายชวนเซฟไว้ก่อนซื้อ</p>
+        </div>
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>TikTok</div>
+          <p>คลิปสั้น ตัดสลับก่อน/หลังใส่หูฟังไว</p>
+          <p class="good">เพลงฮิตคลอ ไม่ใช้เสียงพูดเยอะ แคปชันสั้น "ลองก่อนซื้อ 🎧"</p>
+        </div>
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>FB Reels</div>
+          <p>แคปชันเปรียบเทียบสเปก/ราคาละเอียด</p>
+          <p class="good">ใส่ตำแหน่งชั้น/โซน IT ชัดเจน เจาะกลุ่มคนตั้งใจมาซื้อจริง</p>
+        </div>
+      </div>
+
+      <div class="source-note">ตัวอย่างประกอบ: ไอเดียและบทสนทนาที่ยกมาเป็นการสมมติเพื่อสอน ไม่ใช่แคมเปญจริงของร้านใดในเครือ — ส่วนแนวทางปรับรูปแบบตาม platform เป็นวิธีที่นักทำคอนเทนต์ใช้กันทั่วไป ไม่ใช่กฎที่แพลตฟอร์มประกาศเป็นทางการ (ประมาณการ/แหล่งรอง)</div>
+
+      <div class="progress-nav">
+        <button onclick="M2.go(1)">← ก่อนหน้า</button>
+        <button class="primary" onclick="M2.go(3)">ต่อไป: Health & Wellness →</button>
+      </div>
+    </div>
+
+    <!-- ---- 2.3 HEALTH & WELLNESS ---- -->
+    <div id="sub-2-3" class="subview">
+      <div class="badge-row">
+        <span class="tag example">ตัวอย่างประกอบ — ไอเดียสมมติสำหรับสอน ไม่ใช่แคมเปญจริง</span>
+      </div>
+
+      <div class="lead-block">
+        <h3>ไอเดียหลัก: จุดพักขาที่คนเดินช้อปทั้งวันไม่รู้จัก</h3>
+        <p>ตั้งใจเดินช้อปทั้งวันไม่แวะพักเลย แต่พอบ่ายสองขาเริ่มล้าจนเดินต่อไม่ไหว จึงต้องแวะจุดพักที่เพิ่งเจอโดยบังเอิญ — จบด้วยเฉลยว่าจุดพัก (เก้าอี้นวด 5 นาที) อยู่ตรงไหน ทำไมถึงช่วยได้จริง</p>
+      </div>
+
+      <p class="section-label">โครงตาม Framework โมดูล 1</p>
+      <div class="stage-track">
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>Hook</div>
+          <p>แบบ Negative/เตือนสติ Hook (ดู 1.1)</p>
+          <p class="good">"เดินช้อปทั้งวันแล้วปวดขา เพราะพลาดจุดนี้ไป"</p>
+        </div>
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>Retain</div>
+          <p>ใช้ "แต่/ดังนั้น" แบบ 1.2</p>
+          <p class="good">ตั้งใจเดินทั้งวัน <b>แต่</b>ขาล้าตั้งแต่บ่ายสอง <b>ดังนั้น</b>ต้องแวะจุดที่เพิ่งเจอ</p>
+        </div>
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>Reward</div>
+          <p>เฉลยตรงกับคำถามที่เปิดไว้ (ดู 1.3)</p>
+          <p class="good">เฉลยจุดพัก/เก้าอี้นวด → บอกชั้น/โซนให้ไปนั่งได้เลย</p>
+        </div>
+      </div>
+
+      <p class="section-label">ปรับ 3 แบบตาม Platform</p>
+      <div class="stage-track">
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>IG Reels</div>
+          <p>ภาพก่อน/หลังนั่งเก้าอี้นวด สีหน้าเปลี่ยน</p>
+          <p class="good">ข้อความซ้อนจอ "เดินมา 3 ชม. ยังไหวเพราะจุดนี้" แคปชันชวนเซฟไว้เผื่อมาเดินวันหยุด</p>
+        </div>
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>TikTok</div>
+          <p>คลิปสั้น มุมมองคนเดินเมื่อยแล้วเจอเก้าอี้</p>
+          <p class="good">เพลงจังหวะเบาๆ คลอ แคปชันสั้น "ใครเดินช้อปทั้งวันต้องรู้จุดนี้"</p>
+        </div>
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>FB Reels</div>
+          <p>แคปชันบอกตำแหน่งและเวลาที่ว่างชัดเจน</p>
+          <p class="good">เจาะกลุ่มครอบครัว/ผู้สูงอายุที่มากับลูกหลาน</p>
+        </div>
+      </div>
+
+      <div class="source-note">ตัวอย่างประกอบ: ไอเดียและบทสนทนาที่ยกมาเป็นการสมมติเพื่อสอน ไม่ใช่แคมเปญจริงของร้านใดในเครือ — ส่วนแนวทางปรับรูปแบบตาม platform เป็นวิธีที่นักทำคอนเทนต์ใช้กันทั่วไป ไม่ใช่กฎที่แพลตฟอร์มประกาศเป็นทางการ (ประมาณการ/แหล่งรอง)</div>
+
+      <div class="progress-nav">
+        <button onclick="M2.go(2)">← ก่อนหน้า</button>
+        <button class="primary" onclick="M2.go(4)">ต่อไป: Thai Souvenir →</button>
+      </div>
+    </div>
+
+    <!-- ---- 2.4 THAI SOUVENIR ---- -->
+    <div id="sub-2-4" class="subview">
+      <div class="badge-row">
+        <span class="tag example">ตัวอย่างประกอบ — ไอเดียสมมติสำหรับสอน ไม่ใช่แคมเปญจริง</span>
+      </div>
+
+      <div class="lead-block">
+        <h3>ไอเดียหลัก: ของฝากที่ซื้อรอบเดียวไม่เคยพอ</h3>
+        <p>ตั้งใจซื้อของฝากกลับบ้านแค่ชิ้นเดียว แต่พอแจกเพื่อนแล้วมีคนทักมาขอซื้อต่อ จึงต้องกลับมาซื้อเพิ่มอีกรอบ — จบด้วยเฉลยว่าของฝากชิ้นนี้คืออะไร ทำไมหาที่อื่นไม่ได้</p>
+      </div>
+
+      <p class="section-label">โครงตาม Framework โมดูล 1</p>
+      <div class="stage-track">
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>Hook</div>
+          <p>แบบ How-to/Secret Hook (ดู 1.1)</p>
+          <p class="good">"ของฝากชิ้นนี้ นักท่องเที่ยวซื้อรอบเดียวไม่เคยพอ"</p>
+        </div>
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>Retain</div>
+          <p>ใช้ "แต่/ดังนั้น" แบบ 1.2</p>
+          <p class="good">ตั้งใจซื้อชิ้นเดียว <b>แต่</b>เพื่อนขอซื้อต่อ <b>ดังนั้น</b>ต้องกลับมาซื้อเพิ่ม</p>
+        </div>
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>Reward</div>
+          <p>เฉลยตรงกับคำถามที่เปิดไว้ (ดู 1.3)</p>
+          <p class="good">เฉลยของฝาก + เหตุผลที่หาที่อื่นไม่ได้ → บอกชั้น/โซนที่ซื้อได้</p>
+        </div>
+      </div>
+
+      <p class="section-label">ปรับ 3 แบบตาม Platform</p>
+      <div class="stage-track">
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>IG Reels</div>
+          <p>ภาพสวยจัดวางของฝากให้น่าสนใจ</p>
+          <p class="good">ข้อความซ้อนจอ "ซื้อรอบเดียวไม่พอ" แคปชันเล่าเรื่องเพื่อนขอซื้อต่อ ชวนเซฟไว้ก่อนมาห้าง</p>
+        </div>
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>TikTok</div>
+          <p>คลิปสั้น มุมมองตอนเพื่อนทักมาขอซื้อเพิ่ม</p>
+          <p class="good">เพลงเทรนด์คลอ แคปชันสั้นกระแทก "ของฝากที่ต้องซื้อสองรอบ"</p>
+        </div>
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>FB Reels</div>
+          <p>แคปชันยาว บอกราคาและจุดขายชัดเจน</p>
+          <p class="good">เจาะกลุ่มนักท่องเที่ยว/คนซื้อฝากกลับต่างจังหวัดหรือต่างประเทศ</p>
+        </div>
+      </div>
+
+      <div class="source-note">ตัวอย่างประกอบ: ไอเดียและบทสนทนาที่ยกมาเป็นการสมมติเพื่อสอน ไม่ใช่แคมเปญจริงของร้านใดในเครือ — ส่วนแนวทางปรับรูปแบบตาม platform เป็นวิธีที่นักทำคอนเทนต์ใช้กันทั่วไป ไม่ใช่กฎที่แพลตฟอร์มประกาศเป็นทางการ (ประมาณการ/แหล่งรอง)</div>
+
+      <div class="progress-nav">
+        <button onclick="M2.go(3)">← ก่อนหน้า</button>
+        <button class="primary" onclick="M2.go(5)">ต่อไป: เคสจริง →</button>
+      </div>
+    </div>
+
+    <!-- ---- 2.5 REAL CASE STUDY ---- -->
+    <div id="sub-2-5" class="subview">
+      <div class="badge-row">
+        <span class="tag verified">ยืนยันจากต้นทาง — รายงานข่าวอ้างคำพูดผู้บริหารโดยตรง</span>
+      </div>
+
+      <div class="lead-block">
+        <h3>เคสจริง: Siam Paragon กับ ICONSIAM ชนะรางวัล Social Media ของห้างจริง</h3>
+        <p>ปี 2023 <b>Siam Paragon</b> ได้รางวัล Best Brand Performance on Social Media หมวด "ศูนย์การค้าและห้างสรรพสินค้า" จากงาน Thailand Social Awards ครั้งที่ 11 (ประเมินจากกว่า 2,000 แบรนด์ มีคู่แข่งในหมวดห้างเดียวกัน 80+ แบรนด์) ส่วน <b>ICONSIAM</b> ติด 1 ใน 5 อันดับสุดท้ายของหมวดเดียวกัน</p>
+        <p><b>สิ่งที่ผู้บริหารบอกว่าทำให้ชนะ:</b> ผู้บริหาร Siam Paragon พูดถึงการ "มอบประสบการณ์เกินคาดในทุกมิติ ผ่านกิจกรรมการตลาด อีเวนต์ และการเปิดตัวสินค้าที่หลากหลาย" ส่วนผู้บริหาร ICONSIAM พูดถึงการ "วิเคราะห์ข้อมูลทั้งจากแพลตฟอร์มเองและข้อมูลจากการมอนิเตอร์สื่อออนไลน์" เพื่อทำคอนเทนต์/โปรโมชั่นที่ตรงกับแต่ละกลุ่มคนจริงๆ มากกว่าคอนเทนต์แบบเดียวส่งให้ทุกคน</p>
+        <p class="muted">หมายเหตุ: แหล่งข่าวไม่ได้ให้ตัวเลข engagement/ยอดวิวที่ชัดเจน — เป็นข้อมูลระดับกลยุทธ์ ไม่ใช่สูตรทำคอนเทนต์แบบละเอียดเหมือน 4 หมวดด้านบน</p>
+      </div>
+
+      <div class="callout teal">
+        <b>เชื่อมกับเว็บนี้:</b> "วิเคราะห์ข้อมูลแล้วทำคอนเทนต์ตรงกลุ่มคนจริงๆ" คือหลักการเดียวกับโมดูล 1 (ระบุกลุ่มเป้าหมายคนเดียว ไม่ใช่ "ทุกคน") และคู่มือเลือกแพลตฟอร์มในโมดูล 2 (แต่ละแพลตฟอร์มมีกลุ่มคนต่างกัน) — ห้างจริงที่ชนะรางวัลก็ใช้หลักคิดแบบเดียวกันนี้ ไม่ใช่แค่ทฤษฎีในเว็บ
+      </div>
+
+      <div class="source-note">แหล่งอ้างอิง: <a href="https://www.khaosodenglish.com/sponsored/2023/02/22/siam-piwat-groups-siam-paragon-and-iconsiam-win-best-brand-performance-on-social-media-awards-at-the-11th-thailand-social-awards/" target="_blank" rel="noopener">Khaosod English — Siam Piwat Group's Social Media Awards (2023)</a> — เป็นเคสจริงเคสเดียวที่หาแหล่งยืนยันได้ตรงกับบริบท "ศูนย์การค้า" จริงๆ ระหว่างหารีเสิร์ช ทีมเจอเคส "TikTok For Business: Somsai Mall" ที่ดูน่าสนใจตอนแรก แต่ตรวจแล้วพบว่าคำว่า "Mall" ในชื่อนั้นหมายถึงป้าย TikTok Shop Mall (ร้านค้าออนไลน์ที่ผ่านการรับรอง) ไม่ใช่ศูนย์การค้าจริง จึงไม่นำมาใช้เพราะจะทำให้เข้าใจบริบทผิด</div>
+
+      <div class="progress-nav">
+        <button onclick="M2.go(4)">← ก่อนหน้า</button>
+        <button class="primary" onclick="Router.go('m3')">ต่อไป: Algorithm →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MODULE 3 ============ -->
+  <section id="view-m3" class="view">
+    <div class="m1-header">
+      <p class="eyebrow">โมดูล 03</p>
+      <h2>Algorithm ของแต่ละ Platform</h2>
+      <p>สิ่งที่ IG, TikTok, FB Reels "มองดู" ก่อนตัดสินใจว่าจะดันคอนเทนต์ให้ใครดู — รู้เรื่องนี้แล้วจะเห็นว่าทำไม Framework ในโมดูล 1 ถึงเวิร์กจริง ไม่ใช่แค่ทฤษฎี</p>
+    </div>
+
+    <div class="subtab-row">
+      <button id="tab-3-1" class="active" onclick="M3.go(1)">3.1 Instagram</button>
+      <button id="tab-3-2" onclick="M3.go(2)">3.2 TikTok</button>
+      <button id="tab-3-3" onclick="M3.go(3)">3.3 FB Reels</button>
+      <button id="tab-3-4" onclick="M3.go(4)">3.4 งบโฆษณา (Boost)</button>
+      <button id="tab-3-5" onclick="M3.go(5)">3.5 เชื่อมผลธุรกิจจริง</button>
+    </div>
+
+    <!-- ---- 3.1 INSTAGRAM ---- -->
+    <div id="sub-3-1" class="subview active">
+      <div class="badge-row">
+        <span class="tag verified">ยืนยันจากต้นทาง — บล็อกทางการของ Instagram</span>
+      </div>
+
+      <div class="lead-block">
+        <h3>ทำไมโพสต์ไลก์เยอะ แต่คนเห็นไม่เพิ่มขึ้น</h3>
+        <p><b>โพสต์ A:</b> ได้ 500 ไลก์ แต่ไม่มีคนเซฟหรือแชร์เลย — วันถัดมาคนเห็นเท่าเดิม ไม่โตต่อ</p>
+        <p><b>โพสต์ B:</b> ได้แค่ 100 ไลก์ แต่มีคนเซฟ 80 คน แชร์ต่อ 40 คน — คนเห็นเพิ่มขึ้นเรื่อยๆ ทั้งสัปดาห์</p>
+        <p>Instagram บอกเองว่าสำหรับ Reels ระบบทำนาย 4 อย่างเป็นหลัก: <b>โอกาสที่จะแชร์ต่อ, ดูจนจบ, กดไลก์, และกดดูหน้าเสียง</b> — "แชร์" กับ "ดูจนจบ" มีน้ำหนักมากกว่าไลก์เยอะ เพราะเป็นสัญญาณที่บอกว่าคนอยากส่งต่อจริงๆ ไม่ใช่กดผ่านๆ</p>
+      </div>
+
+      <p class="section-label">สัญญาณที่ Instagram ใช้จัดอันดับ (ยืนยันจากบล็อกทางการ)</p>
+      <div class="checklist">
+        <div class="check-item">
+          <span class="n">1</span>
+          <div><b>Feed:</b> พฤติกรรมของคุณ<span>โพสต์ที่เคยไลก์ เซฟ แชร์ หรือคอมเมนต์ ใช้ทำนายว่าคุณสนใจอะไร</span></div>
+        </div>
+        <div class="check-item">
+          <span class="n">2</span>
+          <div><b>Feed:</b> ข้อมูลโพสต์<span>ความเร็วที่คนไลก์/คอมเมนต์/แชร์/เซฟ (ยิ่งเร็วยิ่งได้เปรียบ) และเวลาที่โพสต์</span></div>
+        </div>
+        <div class="check-item">
+          <span class="n">3</span>
+          <div><b>Reels:</b> ข้อมูลครีเอเตอร์<span>คนเพิ่งมีปฏิสัมพันธ์กับเพจนี้บ่อยแค่ไหน + ยอดผู้ติดตามและ engagement โดยรวม</span></div>
+        </div>
+        <div class="check-item">
+          <span class="n">4</span>
+          <div><b>Reels:</b> ข้อมูลคลิป<span>เสียง ภาพ และความนิยมของคลิปนั้น — ใช้เสียงที่กำลังฮิตช่วยได้เพราะ "กดดูหน้าเสียง" เป็นหนึ่งใน 4 สัญญาณหลัก</span></div>
+        </div>
+      </div>
+
+      <div class="callout teal">
+        <b>เชื่อมกับโมดูล 1:</b> เพราะ "ดูจนจบ" เป็นสัญญาณหลัก การมี Reward ท้ายคลิปที่เฉลยตรงกับ Hook (ดู 1.3) จึงสำคัญมาก — คนดูจะไม่เลื่อนหนีก่อนจบ และ Hook แบบ 1.1 ที่ทิ้งคำถามไว้ ก็ทำให้คนอยู่ดูนานพอจะกดเซฟหรือแชร์
+      </div>
+
+      <p class="section-label">ฟีเจอร์ใหม่ที่ควรรู้ (2026)</p>
+      <div class="callout gold">
+        <b>Trial Reels — ทดลองคลิปกับคนที่ยังไม่ได้ติดตามก่อน:</b> โพสต์คลิปแบบ "ทดลอง" ได้ โดยคลิปจะไม่เข้าฟีดผู้ติดตามตัวเอง แต่ถูกส่งให้คนที่ไม่เคยติดตามเพจดูก่อน เช็กผล (ยอดดู/engagement) ได้หลังผ่านไป 24 ชม. ถ้าผลดีค่อยถ่ายคอนเทนต์แนวเดียวกันมาโพสต์เข้าฟีดหลัก — เหมาะเวลาไม่แน่ใจว่าไอเดียใหม่จะเวิร์กไหม ไม่ต้องเสี่ยงให้ผู้ติดตามเดิมเห็นคลิปที่ยังไม่มั่นใจ ฟีเจอร์นี้ยืนยันจาก Adam Mosseri (หัวหน้า Instagram) ผ่านช่องทางส่วนตัว แต่ยังไม่พบลิงก์ประกาศทางการบน about.instagram.com โดยตรง (ประมาณการ/แหล่งรอง)
+      </div>
+
+      <div class="prod-checklist" id="pc-3-1">
+        <div class="pc-head"><b>เช็กก่อนโพสต์ (IG)</b><span class="pc-count"></span></div>
+        <label class="pc-item"><input type="checkbox" data-k="savecta"><span>ชวนเซฟ/แชร์ในคลิปหรือแคปชัน ไม่ใช่ขอแค่ไลก์</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="reply"><span>เตรียมตอบคอมเมนต์เร็วหลังโพสต์ (ช่วยความเร็วของ engagement)</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="sound"><span>ถ้าใช้เพลง ต้องเป็นเพลงจาก Meta Sound Collection (ลิสต์เพลงที่บัญชีธุรกิจใช้ได้ถูกลิขสิทธิ์) ไม่ใช่เพลงฮิตทั่วไปที่เห็นในเทรนด์ของบัญชีส่วนตัว</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="finish"><span>คลิปสั้นพอที่คนจะดูจนจบ ไม่ยืดเกินจำเป็น</span></label>
+      </div>
+
+      <div class="callout gold">
+        <b>ระวังเรื่องลิขสิทธิ์เพลง:</b> บัญชีธุรกิจของ IG/FB ใช้เพลงได้แค่จาก "Meta Sound Collection" (ประมาณ 14,000 เพลงที่ปลดล็อกให้ใช้เชิงพาณิชย์แล้ว) ไม่ใช่เพลงฮิตทั่วไปที่เห็นเทรนด์บนบัญชีส่วนตัว — ถ้าใช้เพลงนอกลิสต์นี้ เสี่ยงโดนตัดเสียง ลบโพสต์ หรือจำกัดการมองเห็นทั้งบัญชี เช็คก่อนเลือกเพลงทุกครั้งว่าอยู่ในลิสต์ที่ใช้ได้จริง
+      </div>
+
+      <div class="source-note">แหล่งอ้างอิง: <a href="https://about.instagram.com/blog/announcements/instagram-ranking-explained" target="_blank" rel="noopener">Instagram — Ranking Explained (about.instagram.com)</a> บล็อกทางการที่ Instagram เผยแพร่เอง — ส่วนเรื่องลิขสิทธิ์เพลง อ้างอิงจาก <a href="https://www.facebook.com/business/help/402084904469945" target="_blank" rel="noopener">Meta Business Help Centre — Access to the licensed music library</a> (ยืนยันจากต้นทาง) และวิเคราะห์เพิ่มเติมจาก <a href="https://www.trymaas.com/blog/instagram-business-account-trending-music-risks/" target="_blank" rel="noopener">MaaS — Why Business Accounts Can't Use Trending Music</a></div>
+
+      <div class="progress-nav">
+        <button onclick="Router.go('m2')">← กลับตัวอย่าง</button>
+        <button class="primary" onclick="M3.go(2)">ต่อไป: TikTok →</button>
+      </div>
+    </div>
+
+    <!-- ---- 3.2 TIKTOK ---- -->
+    <div id="sub-3-2" class="subview">
+      <div class="badge-row">
+        <span class="tag verified">ยืนยันจากต้นทาง — TikTok Transparency Center</span>
+        <span class="tag secondary">ประมาณการ/แหล่งรอง — ส่วนแคปชัน/ซับไตเติล สรุปจากบทความวิเคราะห์อัลกอริทึมปี 2026</span>
+      </div>
+
+      <div class="lead-block">
+        <h3>ทำไมเพจฟอล 500 แต่คลิปเดียวได้วิวเป็นแสน</h3>
+        <p>เพจ A มีผู้ติดตามแค่ 500 คน แต่คลิปหนึ่งดันได้วิว 200,000 เพราะ TikTok เลือกส่งให้คนที่ไม่เคยติดตามเลยผ่านหน้า For You เพจ B มีผู้ติดตาม 50,000 คน แต่คลิปใหม่ได้วิวแค่ 300 เพราะเนื้อหาคล้ายคลิปก่อนหน้าเกินไปจนระบบ "สลับออก" ไม่ดันซ้ำ</p>
+        <p>TikTok อธิบายเองว่ากระบวนการมี 5 ขั้น: <b>คัดคลิปที่ผ่านการตรวจสอบ → ทำนายว่าคุณจะมีปฏิกิริยายังไง → จัดอันดับตามคะแนนทำนาย → เช็กว่าซ้ำกับคลิปที่เพิ่งดันไปไหม (ถ้าซ้ำจะสลับออก) → กรองตามกฎเพิ่มเติม</b> (เช่น พื้นที่ อายุผู้ใช้)</p>
+      </div>
+
+      <p class="section-label">สัญญาณที่ TikTok ใช้ทำนาย (ยืนยันจาก Transparency Center)</p>
+      <div class="checklist">
+        <div class="check-item">
+          <span class="n">1</span>
+          <div><b>ปฏิกิริยาที่มีต่อคลิป</b><span>ดูจบไหม ไลก์ แชร์ คอมเมนต์ เลื่อนผ่านเร็วแค่ไหน อยู่ดูนานแค่ไหน</span></div>
+        </div>
+        <div class="check-item">
+          <span class="n">2</span>
+          <div><b>ข้อมูลของคลิป</b><span>เวลาที่โพสต์ พื้นที่/ภาษา เพลง ความยาว และแฮชแท็กที่ใช้</span></div>
+        </div>
+        <div class="check-item">
+          <span class="n">3</span>
+          <div><b>พฤติกรรมของคนอื่น</b><span>ระบบดูว่า "คนที่คล้ายคุณ" มีปฏิกิริยากับคลิปแบบไหน แล้วใช้ทำนายว่าคุณจะชอบอะไร</span></div>
+        </div>
+        <div class="check-item">
+          <span class="n">4</span>
+          <div><b>ข้อความในคลิป (แคปชัน/ซับไตเติล/ข้อความบนจอ)</b><span>TikTok เองไม่ได้พูดถึงเรื่องนี้ตรงๆ ใน Transparency Center แต่บทความวิเคราะห์อัลกอริทึมปี 2026 หลายแหล่งระบุตรงกันว่าระบบอ่านข้อความบนจอ แคปชัน และคำพูดที่แปลงเป็นตัวอักษร เพื่อเข้าใจว่าคลิปพูดเรื่องอะไร แล้วเอาไปจับคู่กับคนที่น่าจะสนใจ — เหมือนเป็น "ป้ายกำกับ" เพิ่มเติมให้ระบบเข้าใจคลิปเร็วขึ้น (ประมาณการ/แหล่งรอง)</span></div>
+        </div>
+      </div>
+
+      <div class="callout teal">
+        <b>เชื่อมกับโมดูล 1 และ 2:</b> ยอดฟอลไม่การันตีคนเห็นคลิป (ตามที่บอกไว้ในคู่มือเลือกแพลตฟอร์ม โมดูล 2) เพราะ TikTok เลือกจาก "คะแนนทำนาย" ไม่ใช่จากคนติดตาม — Hook แบบ 1.1 คือด่านแรกที่ทำให้ผ่านขั้น "ทำนาย" เพราะถ้าคนไม่เลื่อนผ่านใน 3 วิแรก ระบบจะทำนายว่าคนอื่นก็จะดูต่อเหมือนกัน แล้วดันคลิปมากขึ้น
+      </div>
+
+      <div class="prod-checklist" id="pc-3-2">
+        <div class="pc-head"><b>เช็กก่อนโพสต์ (TikTok)</b><span class="pc-count"></span></div>
+        <label class="pc-item"><input type="checkbox" data-k="completion"><span>คลิปสั้นพอให้ดูจบได้จริง ไม่ยาวเว่อร์เพื่อความครบถ้วน</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="vary"><span>ไม่ใช้ฟอร์แมต/เพลงซ้ำเดิมทุกคลิป เสี่ยงโดน "สลับออก" เพราะคล้ายกันเกินไป</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="hashtag"><span>ใส่แฮชแท็กและตั้งค่าภาษา/พื้นที่ให้ตรงกลุ่มเป้าหมาย</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="comment"><span>ชวนคอมเมนต์ในคลิป (เช่นตั้งคำถามท้ายคลิป) เพื่อเพิ่มสัญญาณปฏิกิริยา</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="caption"><span>ใส่แคปชัน/ซับไตเติล/ข้อความบนจอที่สื่อใจความชัดเจน ช่วยให้ระบบจัดหมวดคลิปถูกกลุ่ม</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="license"><span>ถ้าเป็นบัญชีธุรกิจ เช็คว่าเพลงที่ใช้มาจาก Commercial Music Library (TikTok กรองให้อัตโนมัติ) ไม่ใช่เพลงเทรนด์ทั่วไปที่บัญชีส่วนตัวใช้ได้</span></label>
+      </div>
+
+      <div class="callout gold">
+        <b>ระวังเรื่องลิขสิทธิ์เพลง:</b> บัญชีธุรกิจบน TikTok ถูกจำกัดให้ใช้เพลงจาก "Commercial Music Library" เท่านั้นโดยอัตโนมัติ (คลังเพลงกว่า 1 ล้านเพลงที่ปลดล็อกให้ใช้เชิงพาณิชย์แล้ว) ไม่ใช่เพลงเทรนด์ทั่วไปที่เห็น — ระบบจะกรองให้เองเมื่อเข้าสู่ระบบด้วยบัญชีธุรกิจ แต่ควรเช็คให้แน่ใจก่อนโพสต์จริงทุกครั้ง
+      </div>
+
+      <div class="source-note">แหล่งอ้างอิง: <a href="https://www.tiktok.com/transparency/en/recommendation-system/" target="_blank" rel="noopener">TikTok Transparency Center — Recommendation System</a> เอกสารทางการที่ TikTok เผยแพร่เอง (สัญญาณหลัก 3 กลุ่มแรก) — ส่วนแคปชัน/ซับไตเติล/ข้อความบนจอ สรุปจาก <a href="https://www.darkroomagency.com/observatory/tiktok-algorithm-guide-2026-everything-we-know-about-how-videos-are-ranked" target="_blank" rel="noopener">Darkroom Agency — TikTok Algorithm Guide 2026</a> และ <a href="https://blog.hootsuite.com/tiktok-algorithm/" target="_blank" rel="noopener">Hootsuite — TikTok Algorithm 2026</a> ซึ่งเป็นบทวิเคราะห์ของนักการตลาด ไม่ใช่คำยืนยันจาก TikTok โดยตรง — ส่วน Commercial Music Library อ้างอิงจาก <a href="https://ads.tiktok.com/help/article/how-to-use-the-commercial-music-library" target="_blank" rel="noopener">TikTok — How to use the Commercial Music Library</a> (ยืนยันจากต้นทาง)</div>
+
+      <div class="progress-nav">
+        <button onclick="M3.go(1)">← ก่อนหน้า</button>
+        <button class="primary" onclick="M3.go(3)">ต่อไป: FB Reels →</button>
+      </div>
+    </div>
+
+    <!-- ---- 3.3 FB REELS ---- -->
+    <div id="sub-3-3" class="subview">
+      <div class="badge-row">
+        <span class="tag verified">ยืนยันจากต้นทาง — Meta Transparency Center + Meta Engineering Blog</span>
+        <span class="tag secondary">ประมาณการ/แหล่งรอง — ส่วน same-day boost สรุปจากบทความอุตสาหกรรม</span>
+      </div>
+
+      <div class="lead-block">
+        <h3>ทำไมคลิปเดียวกัน โพสต์วันนี้ปัง โพสต์พรุ่งนี้เงียบ</h3>
+        <p>ทีมงานถ่ายคลิปเสร็จ แต่รอ 2 วันค่อยโพสต์เพราะอยากตัดต่อให้สวยกว่านี้ — พอโพสต์ กลับได้ยอดชมน้อยกว่าที่คิด เพราะพลาดช่วง "ดันคลิปที่โพสต์วันเดียวกับที่ถ่าย" ไป (อัปเดตตุลาคม 2025 ให้คลิปที่โพสต์วันเดียวกับที่เกิดเหตุการณ์ กระจายได้มากขึ้น 50%)</p>
+        <p>Meta บอกเองว่าระบบ AI ของ Facebook Reels ทำนาย 4 อย่างเหมือนกับ Instagram: <b>โอกาสแชร์ต่อ, ดูจนจบ, กดไลก์, กดดูหน้าเสียง</b></p>
+      </div>
+
+      <p class="section-label">สัญญาณที่ Facebook Reels ใช้ (ผสมยืนยัน+อัปเดตล่าสุด)</p>
+      <div class="checklist">
+        <div class="check-item">
+          <span class="n">1</span>
+          <div><b>ดูจนจบ + แชร์ต่อ</b><span>สองสัญญาณหลักที่ Meta ยืนยันว่ามีน้ำหนักมากที่สุด (ยืนยันจากต้นทาง)</span></div>
+        </div>
+        <div class="check-item">
+          <span class="n">2</span>
+          <div><b>โพสต์วันเดียวกับเหตุการณ์</b><span>อัปเดต ต.ค. 2025 คลิปที่โพสต์วันเดียวกับที่ถ่าย/เกิดเหตุ ได้กระจายเพิ่ม ~50% (ประมาณการ/แหล่งรอง)</span></div>
+        </div>
+        <div class="check-item">
+          <span class="n">3</span>
+          <div><b>เนื้อหาต้นฉบับ</b><span>คลิปที่มีลายน้ำหรือเอามาจากที่อื่น จะถูกลดการมองเห็น (ประมาณการ/แหล่งรอง)</span></div>
+        </div>
+        <div class="check-item">
+          <span class="n">4</span>
+          <div><b>แบบสำรวจ UTIS (User True Interest Survey)</b><span><b>อธิบายง่ายๆ:</b> Meta สุ่มถามคนดูบางคน หลังดูคลิปจบ ด้วยคำถามเดียวว่า "คลิปนี้ตรงกับความสนใจคุณแค่ไหน" ให้คะแนน 1-5 — เหตุผลที่ต้องถามตรงๆ เพราะบางทีคนดูจนจบแค่เพราะเผลอเลื่อนไม่ทัน ไม่ได้แปลว่าชอบจริง ระบบเดิมที่ดูแค่ไลก์/แชร์/ดูจบ เลยพลาดได้ คำตอบจากแบบสำรวจนี้ถูกเอาไปเป็นอีกปัจจัยหนึ่งช่วยดันคลิปที่คนให้คะแนนสูง และลดคลิปที่คนให้คะแนนต่ำ — Meta ยืนยันเองว่าเริ่มใช้ ม.ค. 2026 และวัดผลแล้วว่าความแม่นยำในการจับคู่ความสนใจเพิ่มจาก 48.3% เป็น 63.2% (ยืนยันจากต้นทาง — Meta Engineering Blog)</span></div>
+        </div>
+      </div>
+
+      <div class="callout teal">
+        <b>เชื่อมกับโมดูล 2:</b> กลุ่มเป้าหมายหลักของ FB คืออายุ 25-44 ปีที่ตัดสินใจซื้อจริงจัง (ดูคู่มือเลือกแพลตฟอร์ม) เมื่อระบบเริ่มถามคนดูตรงๆ ว่าเนื้อหาตรงความสนใจแค่ไหน คอนเทนต์ที่ให้ข้อมูลครบจริง (ราคา ที่ตั้ง โปรโมชั่น) จะได้เปรียบมากกว่าคลิปที่หวังแค่ไวรัลแต่ไม่มีสาระ
+      </div>
+
+      <div class="prod-checklist" id="pc-3-3">
+        <div class="pc-head"><b>เช็กก่อนโพสต์ (FB Reels)</b><span class="pc-count"></span></div>
+        <label class="pc-item"><input type="checkbox" data-k="sameday"><span>โพสต์คลิปให้ใกล้เคียงวันที่ถ่าย/เหตุการณ์เกิดขึ้นที่สุด</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="original"><span>ไม่มีลายน้ำจากแพลตฟอร์มอื่น ไม่ใช่คลิปรีโพสต์</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="relevant"><span>เนื้อหาให้ข้อมูลที่กลุ่มเป้าหมายสนใจจริง ไม่ใช่แค่เรียกไลก์</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="shareworthy"><span>มีจุดที่ชวนแชร์ต่อชัดเจน เพราะแชร์เป็นสัญญาณหลัก</span></label>
+      </div>
+
+      <div class="source-note">แหล่งอ้างอิง: <a href="https://transparency.meta.com/features/explaining-ranking/fb-reels/" target="_blank" rel="noopener">Meta Transparency Center — Facebook Reels AI system</a> (สัญญาณหลัก 4 อย่าง ยืนยันจากต้นทาง) และ <a href="https://engineering.fb.com/2026/01/14/ml-applications/adapting-the-facebook-reels-recsys-ai-model-based-on-user-feedback/" target="_blank" rel="noopener">Meta Engineering Blog — Adapting the Facebook Reels RecSys AI Model Based on User Feedback</a> (แบบสำรวจ UTIS ยืนยันจากต้นทางโดยตรง รวมตัวเลข 48.3% → 63.2%) — ส่วน same-day boost (อัปเดต ต.ค. 2025) สรุปจาก <a href="https://posteverywhere.ai/blog/how-the-facebook-algorithm-works" target="_blank" rel="noopener">บทความที่อ้างอิง Meta Transparency Center</a> ยังไม่พบคำยืนยันโดยตรงจาก Meta เอง</div>
+
+      <div class="progress-nav">
+        <button onclick="M3.go(2)">← ก่อนหน้า</button>
+        <button class="primary" onclick="M3.go(4)">ต่อไป: งบโฆษณา (Boost) →</button>
+      </div>
+    </div>
+
+    <!-- ---- 3.4 PAID BOOST ---- -->
+    <div id="sub-3-4" class="subview">
+      <div class="badge-row">
+        <span class="tag secondary">ประมาณการ/แหล่งรอง — สรุปจากบทความเอเจนซี่การตลาดที่วิเคราะห์ข้อมูลแพลตฟอร์มปี 2026 ไม่ใช่ตัวเลขที่ IG/TikTok/FB ประกาศเป็นทางการ</span>
+      </div>
+
+      <div class="lead-block">
+        <h3>เมื่อ organic ไม่พอ — ใช้งบ boost ให้ถูกจุด</h3>
+        <p>3 หัวข้อที่ผ่านมาเน้น organic (ไม่จ่ายเงิน) ล้วนๆ แต่ในความเป็นจริง organic reach ของ IG/FB กำลังลดลงเรื่อยๆ (ดูตัวเลขในคู่มือเลือกแพลตฟอร์ม โมดูล 2) — หัวข้อนี้คือหลักคิดกว้างๆ เรื่องเงินโฆษณา ไม่ใช่คู่มือตั้งค่า Ads Manager แบบละเอียด (เรื่องงบ/การตั้งกลุ่มเป้าหมายละเอียด ควรคุยกับทีมหรือเอเจนซี่ที่ดูแลโฆษณาโดยตรง)</p>
+        <p><b>หลักที่สำคัญที่สุด:</b> เงินโฆษณาไม่ได้ทำให้คอนเทนต์ห่วยกลายเป็นดี — งบที่ได้ผลดีที่สุดคือเอาไป "ดัน" คลิปที่ organic พิสูจน์แล้วว่าคนดูจริงชอบ (ผ่าน checklist ในหัวข้อนี้มาแล้ว) ไม่ใช่เดาทำคลิปใหม่มาลงเงินตั้งแต่ต้น</p>
+      </div>
+
+      <p class="section-label">แต่ละ platform ต่างกันยังไง</p>
+      <div class="checklist">
+        <div class="check-item">
+          <span class="n">1</span>
+          <div><b>TikTok — Spark Ads</b><span>เอาคลิป organic ของแบรนด์เอง หรือคลิปของ creator (ต้องขอ Authorization Code จาก creator ก่อน) มาใส่งบดันต่อ โดยคลิปยังโชว์ยอดไลก์/คอมเมนต์/โปรไฟล์เดิมที่มีอยู่แล้ว ไม่ใช่เริ่มนับใหม่จากศูนย์แบบโฆษณาทั่วไป — มีรายงานว่า completion rate สูงกว่าโฆษณาทั่วไปราว 30% และ engagement สูงกว่าราว 142%</span></div>
+        </div>
+        <div class="check-item">
+          <span class="n">2</span>
+          <div><b>IG/FB Reels Ads</b><span>ใช้สัดส่วนภาพแนวตั้ง 9:16 เหมือนคลิป organic ทุกอย่าง และเลี่ยงวางข้อความในโซน 35% ล่างสุดของจอ (โดนปุ่ม/ไอคอนของแอปบัง) — มีรายงานว่ารูปแบบ Reels ads ทำให้คนกดดูสินค้า/ใส่ตะกร้า/ซื้อเพิ่มขึ้นราว 97% เทียบกับแคมเปญที่ไม่ใช้ Reels</span></div>
+        </div>
+        <div class="check-item">
+          <span class="n">3</span>
+          <div><b>งบควรลงกับคลิปแบบไหน</b><span>เลือกคลิปที่ผ่านเกณฑ์ checklist ก่อนโพสต์ในหัวข้อนี้มาแล้ว และมี engagement organic ที่ดีอยู่แล้วในช่วง 24-48 ชม.แรก — ไม่ใช่คลิปที่เพิ่งโพสต์แล้วยังไม่รู้ผลเลย</span></div>
+        </div>
+      </div>
+
+      <div class="callout teal">
+        <b>เชื่อมกับทุกโมดูล:</b> เพราะงบโฆษณาได้ผลดีที่สุดกับคลิปที่ "พิสูจน์ตัวเองแล้ว" งานหลักของทีมยังเป็นเรื่องเดิม — ทำ Hook/Retain/Reward ให้แข็ง (โมดูล 1) ปรับให้ตรงแพลตฟอร์ม (โมดูล 2) แล้วดูสัญญาณ organic ก่อน (checklist ในโมดูลนี้) — งบโฆษณาเป็นแค่ตัวขยายผล ไม่ใช่ตัวแก้คอนเทนต์ที่อ่อน
+      </div>
+
+      <div class="prod-checklist" id="pc-3-4">
+        <div class="pc-head"><b>เช็กก่อนตัดสินใจ boost</b><span class="pc-count"></span></div>
+        <label class="pc-item"><input type="checkbox" data-k="proven"><span>คลิปนี้มี organic engagement ดีอยู่แล้ว ไม่ใช่คลิปที่ยังไม่เคยพิสูจน์</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="budget"><span>ตั้งงบและระยะเวลาที่ชัดเจน ไม่ปล่อย boost แบบไม่มีกำหนดจบ</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="auth"><span>ถ้าจะ boost คลิปของ creator ขอ Authorization Code ให้เรียบร้อยก่อน (TikTok)</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="metric"><span>ดูยอดแชร์/คอมเมนต์/คนที่ทักมาถามหรือมาซื้อจริง ไม่ใช่แค่ยอดวิวหรือไลก์เพียงอย่างเดียว</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="approve"><span>ได้รับอนุมัติงบและเนื้อหาจากผู้มีอำนาจอนุมัติงบโฆษณาแล้ว ก่อนกด boost จริง</span></label>
+      </div>
+
+      <div class="source-note">แหล่งอ้างอิง: <a href="https://inbeat.agency/blog/tiktok-spark-ads" target="_blank" rel="noopener">inBeat Agency — TikTok Spark Ads Guide 2026</a> และ <a href="https://metricool.com/facebook-reels-ads-guide/" target="_blank" rel="noopener">Metricool — Instagram & Facebook Reels Ads Guide 2026</a> เป็นบทวิเคราะห์ของเอเจนซี่การตลาด ไม่ใช่ตัวเลขที่แพลตฟอร์มประกาศเป็นทางการ — เรื่องงบประมาณ/การตั้งกลุ่มเป้าหมายละเอียด ควรปรึกษาทีมหรือเอเจนซี่ที่ดูแลโฆษณาโดยตรง เพราะไม่ใช่ขอบเขตของเว็บนี้</div>
+
+      <div class="progress-nav">
+        <button onclick="M3.go(3)">← ก่อนหน้า</button>
+        <button class="primary" onclick="M3.go(5)">ต่อไป: เชื่อมผลธุรกิจจริง →</button>
+      </div>
+    </div>
+
+    <!-- ---- 3.5 BUSINESS METRICS BRIDGE ---- -->
+    <div id="sub-3-5" class="subview">
+      <div class="badge-row">
+        <span class="tag example">ตัวอย่างประกอบ — framework ที่ทีมพัฒนาขึ้นเองจากหลักการตลาดทั่วไป ยังไม่มีข้อมูลจริงของห้างมายืนยันความสัมพันธ์นี้</span>
+      </div>
+
+      <div class="lead-block">
+        <h3>Engagement สูง ไม่เท่ากับห้างได้ผลตอบแทนจริง — ต้องมีตัวเชื่อม</h3>
+        <p>4 หัวข้อที่ผ่านมาทั้งหมดวัดผลด้วยตัวเลขของแพลตฟอร์ม (ยอดวิว เอนเกจ แชร์) แต่ตัวเลขพวกนี้ไม่ใช่สิ่งที่ผู้บริหารห้างสนใจโดยตรง — สิ่งที่บอร์ดสนใจคือคนเข้าห้างมากขึ้นไหม ยอดขายผู้เช่าดีขึ้นไหม มูลค่าการเช่าพื้นที่สูงขึ้นไหม หัวข้อนี้คือวิธีเริ่มสร้าง "ตัวเชื่อม" ระหว่างสองฝั่งนี้ ไม่ใช่สูตรสำเร็จที่พิสูจน์แล้ว เพราะห้างยังไม่มีข้อมูลเก็บสะสมมากพอที่จะฟันธงความสัมพันธ์นี้ได้จริง</p>
+      </div>
+
+      <p class="section-label">3 ขั้น — จากตัวเลขแพลตฟอร์มไปถึงธุรกิจจริง</p>
+      <div class="stage-track">
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>ตัวเลขจากแพลตฟอร์ม</div>
+          <p>สิ่งที่แพลตฟอร์มรายงานให้ฟรี</p>
+          <p class="good">ยอดวิว, เอนเกจ, ยอดคนเห็น, สัดส่วนดูจนจบ</p>
+        </div>
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>สัญญาณว่าสนใจจะมาจริง</div>
+          <p>สัญญาณที่บอกว่าคนสนใจจะมาจริง</p>
+          <p class="good">คอมเมนต์ถาม "ที่ไหน/ราคาเท่าไหร่", ทักถามเส้นทาง, กดเซฟ (ตั้งใจกลับมาดูอีกที)</p>
+        </div>
+        <div class="stage">
+          <div class="stage-title"><span class="dot"></span>ผลลัพธ์ทางธุรกิจจริง</div>
+          <p>สิ่งที่บอร์ด/ผู้เช่าสนใจจริง</p>
+          <p class="good">คนเข้าห้างช่วงแคมเปญ, ยอดขายผู้เช่าที่ถูกพูดถึง, การใช้โค้ด/คูปองจากโพสต์</p>
+        </div>
+      </div>
+
+      <div class="callout teal">
+        <b>ทำไมต้องมีขั้นกลาง "สัญญาณว่าสนใจจะมาจริง":</b> ตัวเลขจากแพลตฟอร์มอย่างยอดวิวเปลี่ยนเป็นยอดขายโดยตรงไม่ได้ เพราะวัดแค่ "เห็น" ไม่ใช่ "ตั้งใจมา" — ขั้นกลางนี้คือสิ่งที่พิสูจน์ว่ามีคนตั้งใจจะมาจริง (ถามที่ตั้ง ถามราคา) ถ้าข้ามขั้นนี้ไป จะเอายอด engagement ไปอ้างกับบอร์ดตรงๆ ว่า "ทำให้ยอดขายดีขึ้น" ไม่ได้
+      </div>
+
+      <p class="section-label">วิธีเริ่มเก็บข้อมูลให้พิสูจน์ได้ (ไม่ใช่แค่เดา)</p>
+      <div class="checklist">
+        <div class="check-item">
+          <span class="n">1</span>
+          <div><b>ใส่ตัวติดตามผลลงในทุกแคมเปญ</b><span>โค้ดส่วนลด/คำเฉพาะที่ใช้ได้เฉพาะจากโพสต์นั้น (เช่น "พิมพ์คำว่า POTLUCK ที่ร้าน") เพื่อรู้ว่าใครมาเพราะเห็นโพสต์จริง ไม่ใช่บังเอิญผ่านมา</span></div>
+        </div>
+        <div class="check-item">
+          <span class="n">2</span>
+          <div><b>เทียบคนเข้าห้างวันที่มีแคมเปญ vs วันปกติ</b><span>ขอข้อมูลตัวนับคนเข้าห้างช่วงที่โพสต์ กับช่วงก่อนหน้าที่ไม่มีแคมเปญ (วันในสัปดาห์เดียวกัน สภาพอากาศใกล้เคียงกัน) เพื่อดูส่วนต่างที่พอเชื่อได้</span></div>
+        </div>
+        <div class="check-item">
+          <span class="n">3</span>
+          <div><b>ขอตัวเลขจากผู้เช่าที่ถูกพูดถึงในคลิป</b><span>ถามร้านที่เป็นพระเอกในคลิปว่าช่วงหลังโพสต์มีคนมาถามถึงคลิปไหม ยอดขายช่วงนั้นเปลี่ยนไหม — ไม่ต้องแม่นยำมาก แต่ทำให้มีหลักฐานเชิงคุณภาพเก็บสะสมไว้</span></div>
+        </div>
+        <div class="check-item">
+          <span class="n">4</span>
+          <div><b>เก็บทุกแคมเปญไว้เป็นฐานข้อมูลเดียวกัน</b><span>บันทึก engagement + สัญญาณว่าสนใจจะมาจริง + ผลลัพธ์ทางธุรกิจจริง (ถ้ามี) ของทุกแคมเปญไว้ในที่เดียว สะสมไปสัก 6-12 เดือนถึงจะเริ่มเห็นแนวโน้มที่พอพูดกับบอร์ดได้อย่างมีน้ำหนัก</span></div>
+        </div>
+      </div>
+
+      <div class="source-note">หมายเหตุ: framework นี้เป็นแนวคิดที่ทีมพัฒนาขึ้นเองจากหลักการตลาดทั่วไป (คนเห็น → คนสนใจ → คนซื้อจริง) ไม่ใช่ข้อมูลที่มีการพิสูจน์แล้วเฉพาะเจาะจงกับห้างนี้ — ความแม่นยำของความสัมพันธ์นี้จะดีขึ้นเรื่อยๆ เมื่อมีข้อมูลสะสมมากพอ แม้แต่เคสจริงในโมดูล 2.5 (Siam Paragon/ICONSIAM) ก็ไม่มีตัวเลขคนเข้าห้าง/ยอดขายมายืนยัน มีแค่ระดับกลยุทธ์ — นี่คือเหตุผลที่ห้างควรเริ่มเก็บตัวเลขของตัวเองตั้งแต่วันนี้</div>
+
+      <div class="progress-nav">
+        <button onclick="M3.go(4)">← ก่อนหน้า</button>
+        <button class="primary" onclick="Router.go('m4')">ต่อไป: ใช้ AI ช่วยทำ Content →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MODULE 4 ============ -->
+  <section id="view-m4" class="view">
+    <div class="m1-header">
+      <p class="eyebrow">โมดูล 04</p>
+      <h2>ใช้ AI ช่วยทำ Content</h2>
+      <p>4 prompt ต่อกันเป็นห่วงโซ่ — เอาผลลัพธ์จากขั้นก่อนหน้า มาใส่เป็นข้อมูลตั้งต้นของขั้นถัดไป ใช้ได้กับ ChatGPT, Claude, Gemini หรือ AI ตัวไหนก็ได้ที่พิมพ์คำสั่งเป็นข้อความ</p>
+    </div>
+
+    <div class="badge-row">
+      <span class="tag example">ตัวอย่างประกอบ — ทีมพัฒนา prompt ชุดนี้ขึ้นเองจาก Framework ในโมดูล 1-2 ของเว็บนี้ ไม่ใช่การอ้างอิงจากแหล่งภายนอก ยังไม่มีข้อมูลผลลัพธ์จริงมายืนยันประสิทธิภาพ</span>
+    </div>
+
+    <div class="callout gold">
+      <b>4 ข้อควรรู้ก่อนใช้:</b> (1) เติมข้อมูลจริงลงในช่อง [ ] ทุกช่อง อย่าปล่อยว่างหรือคัดลอกไปทั้งอย่างนั้น (2) ผลลัพธ์จาก AI คือ "ร่างแรก" เท่านั้น ต้องเช็คกับ checklist ของโมดูล 1-3 ก่อนถ่ายจริงเสมอ (3) ห้ามใส่ข้อมูลลูกค้าจริง ข้อมูลลับบริษัท หรือตัวเลขยอดขาย/แคมเปญที่ยังไม่ประกาศ ลงใน prompt เพราะ AI สาธารณะอาจเก็บข้อมูลไว้ฝึกโมเดล (4) คอนเทนต์ที่ AI ช่วยเขียน ต้องผ่านการอนุมัติจากหัวหน้าทีมหรือผู้ที่ได้รับมอบหมายก่อนโพสต์บน official account เสมอ — AI ช่วยร่างได้ แต่ไม่ใช่คนตัดสินใจว่าโพสต์ได้
+    </div>
+
+    <p class="section-label">ห่วงโซ่ 5 ขั้น</p>
+    <div class="flow-track">
+      <div class="flow-step"><span class="fn">4.1</span><b>คิด Hook</b><span class="d">อิงโมดูล 1.1</span></div>
+      <div class="flow-step"><span class="fn">4.2</span><b>สคริปต์ + Storyboard</b><span class="d">อิงโมดูล 1.2-1.3</span></div>
+      <div class="flow-step"><span class="fn">4.3</span><b>ปรับ 3 Platform</b><span class="d">อิงโมดูล 2</span></div>
+      <div class="flow-step"><span class="fn">4.4</span><b>เขียน Caption</b><span class="d">อิงโมดูล 2</span></div>
+      <div class="flow-step"><span class="fn">4.5</span><b>เช็คก่อนถ่าย</b><span class="d">อิงทุก checklist</span></div>
+    </div>
+
+    <div class="subtab-row">
+      <button id="tab-4-1" class="active" onclick="M4.go(1)">4.1 คิด Hook</button>
+      <button id="tab-4-2" onclick="M4.go(2)">4.2 สคริปต์+Storyboard</button>
+      <button id="tab-4-3" onclick="M4.go(3)">4.3 ปรับ Platform</button>
+      <button id="tab-4-4" onclick="M4.go(4)">4.4 เขียน Caption</button>
+      <button id="tab-4-5" onclick="M4.go(5)">4.5 เช็คก่อนถ่าย</button>
+      <button id="tab-4-6" onclick="M4.go(6)">4.6 Shortcut รวมทุกขั้น</button>
+    </div>
+
+    <!-- ---- 4.1 HOOK PROMPT ---- -->
+    <div id="sub-4-1" class="subview active">
+      <div class="lead-block">
+        <h3>ขั้นที่ 1: คิด Hook</h3>
+        <p>ใช้ตอนเริ่มต้นไม่มีไอเดีย หรือมีไอเดียคร่าวๆ แต่ยังไม่รู้จะเปิดคลิปด้วยอะไร — prompt นี้บังคับให้ AI ทำตาม 4 คำถามและ 7 แบบ Hook จากโมดูล 1.1 แทนที่จะเดาเอง</p>
+        <p class="muted">วิธีใช้: กรอกข้อมูล 3 ช่องใน [ ] ก่อนวาง แล้วเลือก Hook ที่ชอบที่สุด 1 อัน เอาไปวางต่อใน 4.2</p>
+      </div>
+
+      <div class="prompt-box">
+        <div class="prompt-box-head">
+          <span>Prompt — คิด Hook</span>
+          <button onclick="PromptBox.copy('pb-4-1', this)">คัดลอก</button>
+        </div>
+        <pre id="pb-4-1">คุณคือนักเขียนสคริปต์ Content สั้นสำหรับโซเชียลมีเดียของศูนย์การค้า ช่วยคิด Hook (ประโยคเปิดคลิป 3 วินาทีแรก) ให้ฉัน 5 แบบ จากข้อมูลนี้:
+
+- สินค้า/ร้าน/กิจกรรมที่จะพูดถึง: [ใส่ข้อมูล เช่น "ร้านชานมชั้น 2 มีเมนูลับไม่บอกในป้ายราคา"]
+- จุดที่น่าสนใจที่สุดที่อยากเก็บไว้เฉลยท้ายคลิป: [ใส่ข้อมูล]
+- กลุ่มเป้าหมาย (ระบุคนเดียว ไม่ใช่ "ทุกคน"): [ใส่ข้อมูล เช่น "คนที่ชอบลองเมนูใหม่ๆ แต่ขี้เกียจถามพนักงาน"]
+
+กฎที่ต้องทำตามทุกข้อ:
+1. แต่ละ Hook ต้องทิ้งคำถามค้างใจไว้ ห้ามเฉลยคำตอบตั้งแต่ต้น
+2. ห้ามใช้คำว่า "มาดูกันว่า" "วันนี้จะพาไป" หรือประโยคเปิดกว้างๆ ที่ไม่เจาะจง
+3. ทำให้ครบ 2 หมวด: 2-3 แบบเป็น Hook คำพูด (ตั้งคำถาม/ท้าทายความเชื่อ/เตือนสติ/แจกเคล็ดลับ) และ 1-2 แบบเป็นไอเดีย Hook ภาพ/การกระทำ (บอกว่าควรเปิดกล้องด้วยภาพอะไร)
+4. หลังแต่ละ Hook ให้บอก 1 บรรทัดว่า Hook นี้ทิ้งคำถามอะไรไว้ในใจคนดู
+
+ตอบเป็นข้อ 1-5 พร้อมระบุว่าแต่ละอันเป็น Hook แบบไหน (คำถาม/ท้าทายความเชื่อ/เตือนสติ/แจกเคล็ดลับ/ภาพ)</pre>
+      </div>
+
+      <div class="callout teal">
+        <b>เชื่อมกับโมดูล 1.1:</b> ถ้า Hook ที่ AI คิดมาดูกว้างหรือเฉลยเร็วเกินไป ให้กลับไปเช็ค "4 คำถามก่อนกดโพสต์" ในโมดูล 1.1 แล้วบอก AI ตรงๆ ว่าข้อไหนยังไม่ผ่าน ให้แก้เฉพาะข้อนั้น ดีกว่าให้คิดใหม่ทั้งหมด
+      </div>
+
+      <div class="progress-nav">
+        <button disabled>← ก่อนหน้า</button>
+        <button class="primary" onclick="M4.go(2)">ต่อไป: สคริปต์ + Storyboard →</button>
+      </div>
+    </div>
+
+    <!-- ---- 4.2 SCRIPT + STORYBOARD PROMPT ---- -->
+    <div id="sub-4-2" class="subview">
+      <div class="lead-block">
+        <h3>ขั้นที่ 2: แต่งสคริปต์เต็ม + Storyboard</h3>
+        <p>ใช้ต่อจาก 4.1 เมื่อเลือก Hook ที่ชอบแล้ว — prompt นี้บังคับให้ AI ใช้โครง "แต่/ดังนั้น" จากโมดูล 1.2 และ Hook-Retain-Reward จากโมดูล 1.3 แทนที่จะเขียนบรรยายเรียบๆ</p>
+        <p class="muted">วิธีใช้: วาง Hook ที่เลือกจาก 4.1 ลงในช่องแรก แล้วเอาสคริปต์ที่ได้ไปวางต่อใน 4.3</p>
+      </div>
+
+      <div class="prompt-box">
+        <div class="prompt-box-head">
+          <span>Prompt — แต่งสคริปต์ + Storyboard</span>
+          <button onclick="PromptBox.copy('pb-4-2', this)">คัดลอก</button>
+        </div>
+        <pre id="pb-4-2">ช่วยแต่งสคริปต์คลิปสั้นแบบเต็ม พร้อม storyboard คร่าวๆ จาก Hook ที่เลือกนี้:
+
+Hook ที่เลือก: [วาง Hook จากขั้นตอนก่อนหน้า]
+ข้อมูลเพิ่มเติมที่ต้องเฉลยตอนจบ: [ใส่ข้อมูล เช่น ชื่อร้าน ชั้น โปรโมชั่น ราคา]
+ความยาวคลิปที่ต้องการ: [ใส่ เช่น "15-20 วินาที"]
+
+โครงที่ต้องใช้ (ห้ามข้าม):
+1. Hook (0-3 วิ): ใช้ตามที่ให้มา ห้ามแก้ความหมาย
+2. Retain (ช่วงกลาง): เขียนเป็นจังหวะ "แต่/ดังนั้น" อย่างน้อย 2 จังหวะ ห้ามใช้คำว่า "แล้วก็" เชื่อมประโยค แต่ละจังหวะต้องเปิดคำถามใหม่ทันทีหลังตอบคำถามเก่า
+3. Reward (ตอนจบ): เฉลยตรงกับคำถามที่ Hook ทิ้งไว้ตั้งแต่ต้น ตามด้วย CTA ที่พูดหลังเฉลยเท่านั้น ห้ามพูด CTA แทนการเฉลย
+
+รูปแบบคำตอบที่ต้องการ:
+- สคริปต์เต็ม (บทพูด/ข้อความซ้อนจอ แยกทีละประโยค)
+- Storyboard ต่อท้ายแต่ละประโยค บอกว่ากล้องควรอยู่มุมไหน เห็นอะไรในเฟรม (1 บรรทัดสั้นๆ ต่อช็อต)
+- ความยาวโดยประมาณต่อช็อต (วินาที)</pre>
+      </div>
+
+      <div class="callout teal">
+        <b>เชื่อมกับโมดูล 1.2-1.3:</b> ถ้าอ่านสคริปต์แล้วใส่คำว่า "แล้วก็" คั่นระหว่างประโยคได้โดยความหมายไม่เพี้ยน แปลว่าจังหวะนั้นยังไม่มีปัญหาแทรกจริง ให้บอก AI ว่าจังหวะไหนอ่อน แล้วให้แก้เฉพาะจุด
+      </div>
+
+      <div class="progress-nav">
+        <button onclick="M4.go(1)">← ก่อนหน้า</button>
+        <button class="primary" onclick="M4.go(3)">ต่อไป: ปรับ Platform →</button>
+      </div>
+    </div>
+
+    <!-- ---- 4.3 PLATFORM ADAPT PROMPT ---- -->
+    <div id="sub-4-3" class="subview">
+      <div class="lead-block">
+        <h3>ขั้นที่ 3: ปรับ 3 แบบตาม Platform</h3>
+        <p>ใช้ต่อจาก 4.2 เมื่อมีสคริปต์เต็มแล้ว — prompt นี้บังคับให้ AI ใช้คู่มือเลือกแพลตฟอร์มจากโมดูล 2 แทนที่จะโพสต์คลิปเดียวซ้ำทุกที่ (ส่วนแคปชันแยกไปเขียนละเอียดที่ 4.4)</p>
+        <p class="muted">วิธีใช้: วางสคริปต์เต็มจาก 4.2 แล้วเอาผลลัพธ์ทั้ง 3 แพลตฟอร์มไปเขียนแคปชันต่อใน 4.4</p>
+      </div>
+
+      <div class="prompt-box">
+        <div class="prompt-box-head">
+          <span>Prompt — ปรับ 3 Platform</span>
+          <button onclick="PromptBox.copy('pb-4-3', this)">คัดลอก</button>
+        </div>
+        <pre id="pb-4-3">จากสคริปต์นี้ ช่วยปรับจังหวะการตัดและภาพให้เหมาะกับ 3 แพลตฟอร์ม โดยไม่เปลี่ยนเนื้อเรื่องหลัก:
+
+สคริปต์เต็ม: [วางสคริปต์จากขั้นตอนก่อนหน้า]
+
+กฎการปรับแต่ละแพลตฟอร์ม:
+- Instagram Reels: เน้นภาพสวย จังหวะนิ่งกว่า ข้อความซ้อนจอตั้งแต่เฟรมแรก
+- TikTok: ตัดให้ดิบขึ้น จังหวะเร็วกว่า ใช้เสียงพูดสดหรือเสียงเพลงที่กำลังฮิต
+- Facebook Reels: จังหวะกลางๆ เน้นให้เห็นรายละเอียดสินค้า/สถานที่ชัดเจนกว่าสองแพลตฟอร์มแรก
+
+สำหรับแต่ละแพลตฟอร์ม ให้ตอบ: การปรับจังหวะ/ภาพจากสคริปต์ต้นฉบับ ว่าตัดต่อหรือถ่ายต่างจากต้นฉบับตรงไหนบ้าง</pre>
+      </div>
+
+      <div class="callout teal">
+        <b>เชื่อมกับโมดูล 2:</b> ก่อนใช้ prompt นี้ ลองเปิดโมดูล 2 ดู "คู่มือเลือกแพลตฟอร์ม" อีกรอบ ถ้าไอเดียนี้เหมาะกับแพลตฟอร์มใดแพลตฟอร์มหนึ่งเป็นพิเศษ (เช่น เนื้อหาต้องให้ข้อมูลราคา/โปรโมชั่นครบ เหมาะ FB มากกว่า) บอก AI ให้เน้นแพลตฟอร์มนั้นเป็นหลักได้
+      </div>
+
+      <div class="progress-nav">
+        <button onclick="M4.go(2)">← ก่อนหน้า</button>
+        <button class="primary" onclick="M4.go(4)">ต่อไป: เขียน Caption →</button>
+      </div>
+    </div>
+
+    <!-- ---- 4.4 CAPTION PROMPT ---- -->
+    <div id="sub-4-4" class="subview">
+      <div class="lead-block">
+        <h3>ขั้นที่ 4: เขียน Caption แต่ละ Platform</h3>
+        <p>ใช้ต่อจาก 4.3 เมื่อปรับคลิปทั้ง 3 แพลตฟอร์มแล้ว — prompt นี้บังคับให้ AI เขียนแคปชันคนละสไตล์ตามพฤติกรรมคนอ่านของแต่ละแพลตฟอร์ม (ดูคู่มือเลือกแพลตฟอร์ม โมดูล 2) ไม่ใช่ก็อปข้อความเดียวไปวางทุกที่</p>
+        <p class="muted">วิธีใช้: วางเนื้อเรื่องคลิป/ข้อมูลที่ต้องบอก แล้วเอาแคปชันที่ได้ไปแปะพร้อมคลิปตอนโพสต์จริง</p>
+      </div>
+
+      <div class="prompt-box">
+        <div class="prompt-box-head">
+          <span>Prompt — เขียน Caption</span>
+          <button onclick="PromptBox.copy('pb-4-4', this)">คัดลอก</button>
+        </div>
+        <pre id="pb-4-4">ช่วยเขียนแคปชันโพสต์ให้ครบ 3 แพลตฟอร์ม จากคลิปนี้ โดยแต่ละแพลตฟอร์มต้องมีสไตล์ต่างกันตามกฎด้านล่าง ไม่ใช่ก็อปข้อความเดียวกันไปวางทุกที่:
+
+เนื้อเรื่องคลิป/Hook ที่ใช้: [วางสรุปคลิปหรือ Hook จากขั้นตอนก่อนหน้า]
+ข้อมูลที่ต้องมีในแคปชัน (ราคา/ที่ตั้ง/เวลา/โปรโมชั่น): [ใส่ข้อมูล]
+Call-to-action ที่ต้องการ: [ใส่ เช่น "ชวนมาชิมภายในสัปดาห์นี้"]
+โทนภาษาของแบรนด์: [ใส่ เช่น "เป็นกันเอง ไม่เป็นทางการ ใช้ภาษาพูด"]
+
+กฎการเขียนแต่ละแพลตฟอร์ม:
+- Instagram Reels: เล่าเรื่องแบบเต็ม 3-5 ประโยค ให้ที่มาก่อนแล้วค่อยเฉลย ปิดท้ายด้วยประโยคชวนเซฟหรือแชร์ (ห้ามขอแค่ไลก์) แทรกอีโมจิได้พอดี ไม่ถึงกับรก
+- TikTok: สั้นที่สุด 1-2 ประโยค เขียนแบบพูดกับเพื่อน ลงท้ายด้วยคำถามที่ชวนคอมเมนต์ (เช่น "ใครเคยลองมั้ย" "เห็นด้วยรึเปล่า") ห้ามใส่ข้อมูลราคา/โปรโมชั่นยาวๆ เพราะคนดูไม่อ่านยาว
+- Facebook Reels: เขียนได้ยาวที่สุด 5-8 ประโยค ใส่ข้อมูลราคา/ที่ตั้ง/เวลา/โปรโมชั่นให้ครบเพราะกลุ่มนี้อ่านก่อนตัดสินใจซื้อจริง จัดเป็นบรรทัดสั้นๆ อ่านง่าย ไม่ใช่พารากราฟยาวติดกัน
+
+สำหรับแต่ละแพลตฟอร์ม ให้ตอบ:
+1) แคปชันเวอร์ชันเต็มที่พร้อมโพสต์
+2) แฮชแท็กแนะนำ 3-5 คำ ต่อแพลตฟอร์ม
+3) ถ้ามีจุดที่ควรใส่อีโมจิ ให้ระบุตำแหน่งไว้ในแคปชัน</pre>
+      </div>
+
+      <div class="callout teal">
+        <b>เชื่อมกับโมดูล 2:</b> เหตุผลที่ต้อง 3 สไตล์ต่างกันเพราะ "แชร์" เป็นสัญญาณหลักของ IG (แคปชันต้องมีจุดชวนแชร์) ส่วน FB กลุ่มอายุ 25-44 อ่านก่อนตัดสินใจซื้อจริง (แคปชันต้องให้ข้อมูลครบ) — ถ้าแคปชันที่ได้ยังดูเหมือนกันทุกแพลตฟอร์ม ให้บอก AI ย้ำกฎที่ต่างกันอีกรอบ
+      </div>
+
+      <div class="progress-nav">
+        <button onclick="M4.go(3)">← ก่อนหน้า</button>
+        <button class="primary" onclick="M4.go(5)">ต่อไป: เช็คก่อนถ่าย →</button>
+      </div>
+    </div>
+
+    <!-- ---- 4.5 QC PROMPT ---- -->
+    <div id="sub-4-5" class="subview">
+      <div class="lead-block">
+        <h3>ขั้นที่ 5: เช็คคุณภาพก่อนถ่าย/โพสต์</h3>
+        <p>ด่านสุดท้ายก่อนถ่ายจริง — ให้ AI ช่วยตรวจสคริปต์ตามเกณฑ์เดียวกับ checklist ในโมดูล 1 ก่อนที่ทีมจะเช็คด้วยตาอีกรอบ (ไม่ใช่ใช้แทนการเช็คของทีม)</p>
+        <p class="muted">วิธีใช้: วางสคริปต์ตัวล่าสุด (ตัวที่จะใช้ถ่ายจริง) แล้วแก้ตามข้อเสนอแนะก่อนถ่าย</p>
+      </div>
+
+      <div class="prompt-box">
+        <div class="prompt-box-head">
+          <span>Prompt — เช็คคุณภาพ</span>
+          <button onclick="PromptBox.copy('pb-4-5', this)">คัดลอก</button>
+        </div>
+        <pre id="pb-4-5">ช่วยตรวจสคริปต์นี้ตามเกณฑ์ด้านล่าง แล้วบอกว่าผ่าน/ไม่ผ่านข้อไหน พร้อมเหตุผลสั้นๆ และข้อเสนอแนะถ้าไม่ผ่าน:
+
+สคริปต์: [วางสคริปต์ที่จะเช็ค]
+
+เกณฑ์ตรวจ:
+1. Hook ระบุคนดูคนเดียวชัดเจน ไม่ใช่ "ทุกคน"
+2. Hook ทิ้งคำถามไว้ ไม่เฉลยตั้งแต่ต้น
+3. เฟรมแรกมีที่มาพอให้คนแปลกหน้าเข้าใจใน 1 วิ
+4. ช่วงกลางใช้ "แต่/ดังนั้น" ไม่ใช่ "แล้วก็" อย่างน้อย 2 จังหวะ
+5. ตอนจบเฉลยตรงกับคำถามที่ Hook เปิดไว้
+6. CTA พูดหลังเฉลยเท่านั้น ไม่ใช่พูดแทนเฉลย
+7. ไม่มีข้อมูลลูกค้าจริง/ข้อมูลลับของบริษัทปนอยู่ในสคริปต์
+
+ตอบเป็นตาราง: ข้อ | ผ่าน/ไม่ผ่าน | เหตุผล | ข้อเสนอแนะ (ถ้ามี)</pre>
+      </div>
+
+      <div class="prod-checklist" id="pc-4-5">
+        <div class="pc-head"><b>ก่อนถ่ายจริง ทีมเช็คเองอีกรอบ (อย่าเชื่อ AI 100%)</b><span class="pc-count"></span></div>
+        <label class="pc-item"><input type="checkbox" data-k="human"><span>อ่านผลตรวจของ AI แล้ว ไม่ใช่ก๊อปวางโดยไม่อ่าน</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="fact"><span>ข้อมูลราคา/โปรโมชั่น/ชั้นที่ระบุในสคริปต์ตรงกับความจริง ณ วันที่จะโพสต์</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="privacy"><span>ไม่มีข้อมูลลูกค้าจริงหรือข้อมูลลับบริษัทหลุดเข้าไปใน prompt หรือสคริปต์</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="brand"><span>โทนเสียง/ภาษายังตรงกับแบรนด์ศูนย์การค้า ไม่ใช่โทนที่ AI เลือกเอง</span></label>
+        <label class="pc-item"><input type="checkbox" data-k="approve"><span>ได้รับอนุมัติจากหัวหน้าทีมหรือผู้ที่ได้รับมอบหมายแล้ว ก่อนโพสต์จริงบน official account</span></label>
+      </div>
+
+      <div class="source-note">Prompt 5 ขั้นด้านบน (4.1-4.5) ทีมพัฒนาขึ้นเองจาก Framework ในโมดูล 1-2 ของเว็บนี้ (ตัวอย่างประกอบ) — เป็นจุดตั้งต้นให้ทีมนำไปปรับใช้ ไม่ใช่สูตรตายตัว ควรทดลองปรับคำสั่งเองตามสไตล์ที่ทีมถนัด — ยังมี prompt แบบย่อรวมทุกขั้นไว้ในคำสั่งเดียวที่ 4.6 สำหรับตอนรีบ</div>
+
+      <div class="progress-nav">
+        <button onclick="M4.go(4)">← ก่อนหน้า</button>
+        <button class="primary" onclick="M4.go(6)">ต่อไป: Shortcut รวมทุกขั้น →</button>
+      </div>
+    </div>
+
+    <!-- ---- 4.6 SHORTCUT ALL-IN-ONE PROMPT ---- -->
+    <div id="sub-4-6" class="subview">
+      <div class="badge-row">
+        <span class="tag example">ตัวอย่างประกอบ — prompt เสริม รวม 5 ขั้นด้านบนไว้ในคำสั่งเดียว</span>
+      </div>
+
+      <div class="lead-block">
+        <h3>Shortcut: รวมทุกขั้นไว้ในคำสั่งเดียว</h3>
+        <p>ใช้ตอนรีบ หรือทำ content เล็กๆ ที่ไม่ต้องละเอียดมาก — prompt นี้ให้ AI ทำครบทั้ง Hook, สคริปต์+Storyboard, ปรับ 3 Platform, Caption และเช็คคุณภาพ ในคำตอบเดียว โดย AI จะเลือก Hook ที่ดีที่สุดเองแทนให้ทีมเลือก (ต่างจากขั้น 4.1-4.5 ที่ทีมเลือก Hook เองก่อนไปขั้นต่อไป)</p>
+        <p class="muted">ข้อแลกเปลี่ยน: เร็วกว่ามาก แต่ทีมไม่ได้เลือก Hook เอง คุณภาพอาจไม่ละเอียดเท่าทำทีละขั้น — ใช้กับ content สำคัญ/แคมเปญหลัก ให้ทำทีละขั้น (4.1-4.5) ดีกว่า</p>
+      </div>
+
+      <div class="prompt-box">
+        <div class="prompt-box-head">
+          <span>Prompt — Shortcut ครบในคำสั่งเดียว</span>
+          <button onclick="PromptBox.copy('pb-4-6', this)">คัดลอก</button>
+        </div>
+        <pre id="pb-4-6">คุณคือนักเขียนสคริปต์ Content สั้นสำหรับโซเชียลมีเดียของศูนย์การค้า ช่วยทำให้ครบทุกขั้นตอนในคำตอบเดียว จากข้อมูลนี้:
+
+- สินค้า/ร้าน/กิจกรรมที่จะพูดถึง: [ใส่ข้อมูล]
+- จุดที่น่าสนใจที่สุดที่อยากเก็บไว้เฉลยท้ายคลิป: [ใส่ข้อมูล]
+- กลุ่มเป้าหมาย (ระบุคนเดียว ไม่ใช่ "ทุกคน"): [ใส่ข้อมูล]
+- ข้อมูลที่ต้องมีในแคปชัน (ราคา/ที่ตั้ง/เวลา/โปรโมชั่น): [ใส่ข้อมูล]
+- ความยาวคลิปที่ต้องการ: [ใส่ เช่น "15-20 วินาที"]
+- โทนภาษาของแบรนด์: [ใส่ข้อมูล]
+
+ทำตามลำดับนี้ในคำตอบเดียว ห้ามข้ามขั้นไหน:
+
+ขั้น 1 — Hook: คิด Hook 3 แบบ (อย่างน้อย 1 แบบตั้งคำถาม 1 แบบท้าทายความเชื่อ/เตือนสติ) แต่ละอันต้องทิ้งคำถามค้างใจไว้ ห้ามเฉลยตั้งแต่ต้น จากนั้นเลือก Hook ที่แข็งที่สุด 1 อันมาใช้ต่อในขั้นถัดไป พร้อมบอกเหตุผลที่เลือก
+
+ขั้น 2 — สคริปต์ + Storyboard: แต่งสคริปต์เต็มจาก Hook ที่เลือก ใช้โครง Hook (0-3วิ) → Retain (จังหวะ "แต่/ดังนั้น" อย่างน้อย 2 จังหวะ ห้ามใช้คำว่า "แล้วก็") → Reward (เฉลยตรงกับคำถามที่ Hook ทิ้งไว้ + CTA พูดหลังเฉลยเท่านั้น) ต่อท้ายแต่ละประโยคด้วย storyboard สั้นๆ บอกมุมกล้อง/สิ่งที่เห็นในเฟรม
+
+ขั้น 3 — ปรับ 3 Platform: จากสคริปต์ในขั้น 2 บอกการปรับจังหวะ/ภาพสำหรับ Instagram Reels (ภาพสวย จังหวะนิ่งกว่า) TikTok (ดิบ จังหวะเร็วกว่า) และ Facebook Reels (เน้นให้เห็นรายละเอียดสินค้า/สถานที่ชัดกว่าสองแพลตฟอร์มแรก)
+
+ขั้น 4 — Caption: เขียนแคปชันแยก 3 แพลตฟอร์ม — Instagram: เล่าเรื่องเต็ม 3-5 ประโยค ปิดท้ายชวนเซฟ/แชร์ (ห้ามขอแค่ไลก์) / TikTok: สั้น 1-2 ประโยค พูดแบบเพื่อน ลงท้ายด้วยคำถามชวนคอมเมนต์ / Facebook: ยาว 5-8 ประโยค ใส่ข้อมูลราคา/ที่ตั้ง/เวลา/โปรโมชั่นให้ครบ พร้อมแฮชแท็กแนะนำ 3-5 คำต่อแพลตฟอร์ม
+
+ขั้น 5 — เช็คคุณภาพ: ตรวจสคริปต์ที่แต่งเองในขั้น 2 ตามเกณฑ์นี้ แล้วบอกผ่าน/ไม่ผ่านข้อไหน พร้อมเหตุผล: (1) Hook ระบุคนดูคนเดียวชัดเจน (2) Hook ไม่เฉลยตั้งแต่ต้น (3) เฟรมแรกมีที่มาพอให้คนแปลกหน้าเข้าใจ (4) ช่วงกลางใช้ "แต่/ดังนั้น" ไม่ใช่ "แล้วก็" (5) Reward เฉลยตรงกับคำถามที่ Hook เปิดไว้ (6) CTA พูดหลังเฉลยเท่านั้น
+
+จัดคำตอบเป็นหัวข้อ "ขั้น 1" ถึง "ขั้น 5" ตามลำดับด้านบน ให้อ่านและคัดลอกไปใช้ต่อได้ง่าย</pre>
+      </div>
+
+      <div class="callout gold">
+        <b>ยังต้องเช็คเองอยู่ดี:</b> prompt นี้รวมขั้นตอนให้เร็วขึ้น แต่ไม่ได้แทนสายตาคน — ก่อนถ่ายจริงยังต้องเทียบกับ checklist ในโมดูล 1 และเช็คว่าข้อมูลราคา/โปรโมชั่นที่ AI ใส่มาถูกต้องตรงกับความจริง เหมือนขั้น 4.5
+      </div>
+
+      <div class="progress-nav">
+        <button onclick="M4.go(5)">← ก่อนหน้า</button>
+        <button class="primary" onclick="Router.go('home')">กลับหน้าแรก</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GLOSSARY ============ -->
+  <section id="view-glossary" class="view">
+    <div class="m1-header">
+      <p class="eyebrow">อ้างอิง</p>
+      <h2>คำศัพท์ที่ใช้บ่อยในเว็บนี้</h2>
+      <p>ศัพท์ EN-TH ที่เจอซ้ำๆ ทั้ง 4 โมดูล เรียงตามหมวดที่ใช้ ไม่ต้องอ่านรวดเดียวจบ — เปิดเช็คได้เวลาเจอคำที่ไม่คุ้นระหว่างอ่านโมดูลอื่น</p>
+    </div>
+
+    <p class="hook-group-label">เนื้อเรื่อง / สคริปต์</p>
+    <div class="hook-type-grid">
+      <div class="hook-type-card">
+        <p class="name">Hook</p>
+        <p class="ex">ประโยค/ภาพเปิดคลิป 3 วินาทีแรก ที่ต้องทิ้งคำถามค้างใจไว้ให้คนอยากดูต่อ (ดูโมดูล 1.1)</p>
+      </div>
+      <div class="hook-type-card">
+        <p class="name">Retain</p>
+        <p class="ex">ช่วงกลางคลิปที่ร้อยเรื่องด้วยจังหวะ "แต่/ดังนั้น" เพื่อดึงคนดูไว้ไม่ให้เลื่อนหนี (ดูโมดูล 1.2)</p>
+      </div>
+      <div class="hook-type-card">
+        <p class="name">Reward</p>
+        <p class="ex">ช่วงจบที่เฉลยตรงกับคำถามที่ Hook เปิดไว้ ตามด้วย CTA (ดูโมดูล 1.3)</p>
+      </div>
+      <div class="hook-type-card">
+        <p class="name">CTA (Call-to-Action)</p>
+        <p class="ex">ประโยคชวนคนดูทำอะไรต่อ เช่น เซฟ แชร์ คอมเมนต์ มาที่ร้าน — ควรพูดหลังเฉลยเท่านั้น ไม่ใช่พูดแทนเฉลย</p>
+      </div>
+      <div class="hook-type-card">
+        <p class="name">Storyboard</p>
+        <p class="ex">แผนภาพ/บันทึกสั้นๆ บอกว่าแต่ละช็อตกล้องอยู่มุมไหน เห็นอะไรในเฟรม ก่อนไปถ่ายจริง</p>
+      </div>
+      <div class="hook-type-card">
+        <p class="name">Caption</p>
+        <p class="ex">ข้อความที่แปะคู่กับคลิปตอนโพสต์ — แต่ละ platform ควรเขียนสไตล์ต่างกัน (ดูโมดูล 4.4)</p>
+      </div>
+    </div>
+
+    <p class="hook-group-label">Engagement / Algorithm</p>
+    <div class="hook-type-grid">
+      <div class="hook-type-card">
+        <p class="name">Engagement</p>
+        <p class="ex">ภาพรวมปฏิกิริยาที่คนมีต่อโพสต์ เช่น ไลก์ คอมเมนต์ แชร์ เซฟ ดูจนจบ</p>
+      </div>
+      <div class="hook-type-card">
+        <p class="name">Organic Reach</p>
+        <p class="ex">จำนวนคนที่เห็นโพสต์แบบไม่จ่ายเงินโฆษณา — ตัวเลขนี้กำลังลดลงเรื่อยๆ ในหลายแพลตฟอร์ม</p>
+      </div>
+      <div class="hook-type-card">
+        <p class="name">Reach vs Impression</p>
+        <p class="ex">Reach = จำนวน "คน" ที่เห็น / Impression = จำนวน "ครั้ง" ที่โพสต์ถูกแสดง (คนเดียวเห็นซ้ำหลายครั้งก็นับหลาย impression)</p>
+      </div>
+      <div class="hook-type-card">
+        <p class="name">Completion Rate / Watch Time</p>
+        <p class="ex">สัดส่วนคนที่ดูคลิปจนจบ หรือเวลารวมที่คนใช้ดูคลิป — เป็นสัญญาณหลักที่ทั้ง 3 แพลตฟอร์มใช้จัดอันดับ (ดูโมดูล 3)</p>
+      </div>
+      <div class="hook-type-card">
+        <p class="name">Algorithm / Ranking Signal</p>
+        <p class="ex">ระบบที่แพลตฟอร์มใช้ตัดสินว่าจะดันคอนเทนต์ให้ใครเห็นก่อน โดยดูจาก "สัญญาณ" ต่างๆ เช่น ดูจนจบ แชร์ คอมเมนต์</p>
+      </div>
+      <div class="hook-type-card">
+        <p class="name">For You Page</p>
+        <p class="ex">หน้าฟีดหลักของ TikTok ที่ระบบเลือกคลิปมาให้ดูเอง ไม่ใช่จากคนที่ติดตาม — เป็นที่มาของยอดวิวส่วนใหญ่</p>
+      </div>
+    </div>
+
+    <p class="hook-group-label">โฆษณา (Paid)</p>
+    <div class="hook-type-grid">
+      <div class="hook-type-card">
+        <p class="name">Boost</p>
+        <p class="ex">การจ่ายเงินดันโพสต์ที่มีอยู่แล้วให้คนเห็นเพิ่มขึ้น ต่างจากการสร้างโฆษณาใหม่ตั้งแต่ต้น (ดูโมดูล 3.4)</p>
+      </div>
+      <div class="hook-type-card">
+        <p class="name">Spark Ads</p>
+        <p class="ex">ฟีเจอร์ของ TikTok ที่เอาคลิป organic ของแบรนด์หรือ creator มาลงเงินดันต่อ โดยยอด engagement เดิมยังติดไปกับคลิป</p>
+      </div>
+      <div class="hook-type-card">
+        <p class="name">Authorization Code</p>
+        <p class="ex">รหัสที่ creator ต้องให้แบรนด์ก่อน ถึงจะเอาคลิปของ creator คนนั้นไปลงเงินโฆษณาแบบ Spark Ads ได้ตามกฎ</p>
+      </div>
+    </div>
+
+    <p class="hook-group-label">AI (โมดูล 4)</p>
+    <div class="hook-type-grid">
+      <div class="hook-type-card">
+        <p class="name">Prompt</p>
+        <p class="ex">ข้อความคำสั่งที่พิมพ์ให้ AI ทำงานให้ — ยิ่งใส่รายละเอียด/กฎชัดเจน ผลลัพธ์ยิ่งตรงกับที่ต้องการ</p>
+      </div>
+    </div>
+
+    <div class="source-note">หมายเหตุ: คำอธิบายด้านบนเขียนแบบเข้าใจง่ายสำหรับทีมใช้อ้างอิงกันเอง ไม่ใช่นิยามทางการจากแพลตฟอร์มใดๆ</div>
+
+    <div class="progress-nav">
+      <button onclick="Router.go('home')">← กลับหน้าแรก</button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  Content Pot Luck · Training Hub สำหรับทีมทำ Content ศูนย์การค้า · ครบทั้ง 4 โมดูล + คำศัพท์ · อัปเดตล่าสุด ก.ย. 2026
+</footer>
+
+<script>
+  const Router = {
+    go(view){
+      document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+      const target = document.getElementById('view-'+view);
+      if(target) target.classList.add('active');
+      document.querySelectorAll('nav.top-nav button').forEach(b=>b.classList.remove('active'));
+      const navBtn = document.getElementById('nav-'+view);
+      if(navBtn) navBtn.classList.add('active');
+      window.scrollTo({top:0, behavior:'instant'});
+      try{ localStorage.setItem('cpl_last_view', view); }catch(e){}
+    }
+  };
+  const M1 = {
+    go(n){
+      document.querySelectorAll('#view-m1 .subview').forEach(v=>v.classList.remove('active'));
+      document.querySelectorAll('#view-m1 .subtab-row button').forEach(b=>b.classList.remove('active'));
+      const el = document.getElementById('sub-1-'+n);
+      if(el) el.classList.add('active');
+      const tab = document.getElementById('tab-1-'+n);
+      if(tab) tab.classList.add('active');
+      const main = document.querySelector('main');
+      if(main) main.scrollIntoView({behavior:'instant', block:'start'});
+    }
+  };
+  const M2 = {
+    go(n){
+      Router.go('m2');
+      document.querySelectorAll('#view-m2 .subview').forEach(v=>v.classList.remove('active'));
+      document.querySelectorAll('#view-m2 .subtab-row button').forEach(b=>b.classList.remove('active'));
+      const el = document.getElementById('sub-2-'+n);
+      if(el) el.classList.add('active');
+      const tab = document.getElementById('tab-2-'+n);
+      if(tab) tab.classList.add('active');
+      const main = document.querySelector('main');
+      if(main) main.scrollIntoView({behavior:'instant', block:'start'});
+    }
+  };
+  const M3 = {
+    go(n){
+      Router.go('m3');
+      document.querySelectorAll('#view-m3 .subview').forEach(v=>v.classList.remove('active'));
+      document.querySelectorAll('#view-m3 .subtab-row button').forEach(b=>b.classList.remove('active'));
+      const el = document.getElementById('sub-3-'+n);
+      if(el) el.classList.add('active');
+      const tab = document.getElementById('tab-3-'+n);
+      if(tab) tab.classList.add('active');
+      const main = document.querySelector('main');
+      if(main) main.scrollIntoView({behavior:'instant', block:'start'});
+    }
+  };
+  const M4 = {
+    go(n){
+      Router.go('m4');
+      document.querySelectorAll('#view-m4 .subview').forEach(v=>v.classList.remove('active'));
+      document.querySelectorAll('#view-m4 .subtab-row button').forEach(b=>b.classList.remove('active'));
+      const el = document.getElementById('sub-4-'+n);
+      if(el) el.classList.add('active');
+      const tab = document.getElementById('tab-4-'+n);
+      if(tab) tab.classList.add('active');
+      const main = document.querySelector('main');
+      if(main) main.scrollIntoView({behavior:'instant', block:'start'});
+    }
+  };
+
+  const PromptBox = {
+    copy(id, btn){
+      const pre = document.getElementById(id);
+      if(!pre) return;
+      const text = pre.innerText;
+      const done = ()=>{
+        const original = btn.textContent;
+        btn.textContent = 'คัดลอกแล้ว ✓';
+        btn.classList.add('copied');
+        setTimeout(()=>{ btn.textContent = original; btn.classList.remove('copied'); }, 1800);
+      };
+      try{
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(text).then(done).catch(()=>PromptBox.fallbackCopy(text, done));
+        } else {
+          PromptBox.fallbackCopy(text, done);
+        }
+      }catch(e){ PromptBox.fallbackCopy(text, done); }
+    },
+    fallbackCopy(text, done){
+      try{
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+        document.body.appendChild(ta); ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        done();
+      }catch(e){}
+    }
+  };
+
+  // restore last view for convenience (per-viewer only)
+  try{
+    const last = localStorage.getItem('cpl_last_view');
+    if(last === 'm1' || last === 'm2' || last === 'm3' || last === 'm4' || last === 'glossary') Router.go(last);
+  }catch(e){}
+
+  // production checklists — tick state saved per-viewer only (localStorage), never shared
+  const Checklist = {
+    key(id){ return 'cpl_check_'+id; },
+    load(id){
+      try{ return JSON.parse(localStorage.getItem(this.key(id))||'{}'); }catch(e){ return {}; }
+    },
+    save(id, state){
+      try{ localStorage.setItem(this.key(id), JSON.stringify(state)); }catch(e){}
+    },
+    updateCount(id){
+      const root = document.getElementById(id);
+      if(!root) return;
+      const items = root.querySelectorAll('.pc-item');
+      const done = root.querySelectorAll('.pc-item.done').length;
+      const countEl = root.querySelector('.pc-count');
+      if(countEl) countEl.textContent = done+'/'+items.length+' เสร็จแล้ว';
+    },
+    init(id){
+      const root = document.getElementById(id);
+      if(!root) return;
+      const state = this.load(id);
+      root.querySelectorAll('.pc-item').forEach(item=>{
+        const cb = item.querySelector('input');
+        const k = cb.getAttribute('data-k');
+        if(state[k]){ cb.checked = true; item.classList.add('done'); }
+        item.addEventListener('click', (e)=>{
+          if(e.target !== cb){ e.preventDefault(); cb.checked = !cb.checked; }
+          item.classList.toggle('done', cb.checked);
+          state[k] = cb.checked;
+          Checklist.save(id, state);
+          Checklist.updateCount(id);
+        });
+      });
+      this.updateCount(id);
+    }
+  };
+  ['pc-1-1','pc-1-2','pc-1-3','pc-3-1','pc-3-2','pc-3-3','pc-3-4','pc-4-5'].forEach(id=>Checklist.init(id));
+</script>
